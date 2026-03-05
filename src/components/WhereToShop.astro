@@ -1,0 +1,339 @@
+---
+const markets = [
+  {
+    name: "Kingston Springs Farmers Market",
+    type: "Farmers Market",
+    schedule: "Saturdays, 8am–1pm (Seasonal)",
+    location: "Kingston Springs, TN",
+    notes: "Our home market! Come say hello.",
+    icon: "🌿",
+    status: "regular",
+  },
+  {
+    name: "Nashville Farmers Market",
+    type: "Farmers Market",
+    schedule: "Select Saturdays",
+    location: "900 Rosa L Parks Blvd, Nashville, TN",
+    notes: "Check our Instagram for dates we'll be there.",
+    icon: "🏙️",
+    status: "select",
+  },
+  {
+    name: "Cheatham County Fall Festival",
+    type: "Festival",
+    schedule: "October (annual)",
+    location: "Ashland City, TN",
+    notes: "Live music, local vendors, and fall baked goods.",
+    icon: "🍂",
+    status: "seasonal",
+  },
+];
+
+const upcoming = [
+  {
+    date: "TBD",
+    event: "Spring Market Season Kickoff",
+    location: "Kingston Springs, TN",
+    what: "Fresh strawberry jam, spring cakes, and new pickles",
+  },
+  {
+    date: "TBD",
+    event: "Summer Canning Fair",
+    location: "Cheatham County",
+    what: "Peach preserves, tomato relish, bread & butter pickles",
+  },
+  {
+    date: "TBD",
+    event: "Holiday Bake Sale",
+    location: "Kingston Springs area",
+    what: "Holiday cakes, gift jars, seasonal preserves",
+  },
+];
+---
+
+<section class="shop section-pad" id="shop">
+  <div class="container">
+    <!-- Header -->
+    <div class="section-header">
+      <span class="section-label">Come find us</span>
+      <h2 class="section-title">Where to Shop</h2>
+      <p class="section-intro">
+        We sell at local farmers markets and festivals around Middle Tennessee.
+        Follow us on Instagram or check back here for updated dates.
+      </p>
+      <div class="divider"><span>✦</span></div>
+    </div>
+
+    <!-- Market cards -->
+    <div class="shop__markets">
+      {markets.map((m) => (
+        <div class={`market-card market-card--${m.status}`}>
+          <div class="market-card__icon">{m.icon}</div>
+          <div class="market-card__body">
+            <span class="market-card__type">{m.type}</span>
+            <h3 class="market-card__name">{m.name}</h3>
+            <p class="market-card__schedule">📅 {m.schedule}</p>
+            <p class="market-card__location">📍 {m.location}</p>
+            <p class="market-card__notes script">{m.notes}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Upcoming events -->
+    <div class="upcoming">
+      <h3 class="upcoming__title">
+        <span class="script">Upcoming Events</span>
+      </h3>
+      <p class="upcoming__note">Dates will be confirmed — check back soon or follow us on Instagram!</p>
+
+      <div class="upcoming__list">
+        {upcoming.map((ev) => (
+          <div class="upcoming__item">
+            <div class="upcoming__date">
+              <span class="upcoming__date-label">Date</span>
+              <span class="upcoming__date-val script">{ev.date}</span>
+            </div>
+            <div class="upcoming__info">
+              <h4 class="upcoming__event">{ev.event}</h4>
+              <p class="upcoming__location">📍 {ev.location}</p>
+              <p class="upcoming__what">🧁 {ev.what}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- CTA banner -->
+    <div class="shop__cta-banner ornament-border">
+      <p class="shop__cta-text">
+        Can't make it to a market?
+        <strong>We take local orders</strong> — just reach out and we'll arrange pickup.
+      </p>
+      <a href="#orders" class="btn btn-primary">Place an Order</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .shop {
+    background: var(--color-cream);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-intro {
+    max-width: 560px;
+    margin-inline: auto;
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-top: 0.75rem;
+  }
+
+  /* Market Cards */
+  .shop__markets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .market-card {
+    background: var(--color-bone);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    border: 2px solid var(--color-sage-light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .market-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .market-card--regular { border-color: var(--color-sage); }
+  .market-card--select  { border-color: var(--color-rose); }
+  .market-card--seasonal { border-color: var(--color-yellow); }
+
+  .market-card--regular::after {
+    content: 'Regular';
+    position: absolute;
+    top: 0.75rem;
+    right: -1.75rem;
+    background: var(--color-sage);
+    color: white;
+    font-size: 0.7rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.25rem 2.25rem;
+    transform: rotate(35deg);
+  }
+
+  .market-card__icon {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .market-card__type {
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    display: block;
+  }
+
+  .market-card__name {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-brown);
+    margin-top: 0.25rem;
+  }
+
+  .market-card__schedule,
+  .market-card__location {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .market-card__notes {
+    font-size: 0.95rem;
+    color: var(--color-rose-dark);
+    border-top: 1px solid var(--color-sage-light);
+    padding-top: 0.5rem;
+    margin-top: auto;
+  }
+
+  /* Upcoming Events */
+  .upcoming {
+    background: var(--color-bone);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    border: 2px dashed var(--color-rose-light);
+  }
+
+  .upcoming__title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--color-rose-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  .upcoming__note {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .upcoming__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .upcoming__item {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    background: var(--color-cream);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    border-left: 4px solid var(--color-rose);
+  }
+
+  .upcoming__date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 72px;
+    border-right: 1px solid var(--color-rose-light);
+    padding-right: 1.25rem;
+    gap: 0.25rem;
+  }
+
+  .upcoming__date-label {
+    font-size: 0.7rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .upcoming__date-val {
+    font-size: 1rem;
+    color: var(--color-rose-dark);
+    text-align: center;
+  }
+
+  .upcoming__event {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-brown);
+    margin-bottom: 0.25rem;
+  }
+
+  .upcoming__location,
+  .upcoming__what {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* CTA Banner */
+  .shop__cta-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 2rem 2.5rem;
+    background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-bone) 100%);
+    flex-wrap: wrap;
+  }
+
+  .shop__cta-text {
+    font-size: 1.05rem;
+    color: var(--color-text);
+    flex: 1;
+    min-width: 200px;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .shop__markets { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .upcoming { padding: 1.5rem; }
+
+    .upcoming__item { flex-direction: column; gap: 0.75rem; }
+
+    .upcoming__date {
+      flex-direction: row;
+      align-items: center;
+      border-right: none;
+      border-bottom: 1px solid var(--color-rose-light);
+      padding-right: 0;
+      padding-bottom: 0.75rem;
+      min-width: auto;
+    }
+
+    .shop__cta-banner { flex-direction: column; text-align: center; }
+  }
+</style>
