@@ -46,7 +46,7 @@ const dates = [
     </div>
 
     <span class="eyebrow">Upcoming</span>
-    <h2 class="dates__title">Tour Dates</h2>
+    <h2 class="dates__title">Next Stops</h2>
 
     <div class="dates__list">
       {dates.map((d) => (
@@ -66,7 +66,13 @@ const dates = [
       ))}
     </div>
 
-    <p class="dates__note">Follow us on Instagram for last-minute pop-ups and market updates.</p>
+    <div class="dates__signup">
+      <p class="dates__signup-text">Stay in the know — new items, next stops, and seasonal specials delivered to your&nbsp;inbox.</p>
+      <form class="dates__form" action="#" method="POST">
+        <input type="email" name="email" placeholder="Your email address" required class="dates__input" />
+        <button type="submit" class="btn btn-rose">Sign Up</button>
+      </form>
+    </div>
 
   </div>
 </section>
@@ -160,11 +166,37 @@ const dates = [
     color: var(--color-rose-dark);
   }
 
-  .dates__note {
-    font-family: var(--font-script);
+  .dates__signup {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .dates__signup-text {
     font-size: 1rem;
     color: var(--color-text-muted);
-    margin-top: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  .dates__form {
+    display: flex;
+    gap: 0.75rem;
+    max-width: 480px;
+  }
+
+  .dates__input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-cream);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--color-brown);
+  }
+
+  .dates__input::placeholder {
+    color: var(--color-text-muted);
   }
 
   @media (max-width: 540px) {
