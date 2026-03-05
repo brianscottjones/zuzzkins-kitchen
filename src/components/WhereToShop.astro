@@ -1,148 +1,182 @@
 ---
-const markets = [
+const dates = [
   {
-    name: "Kingston Springs Farmers Market",
-    schedule: "Saturdays, 8am–1pm · Seasonal",
-    note: "Our home market. Come say hello.",
+    date: "MAR 15",
+    day: "SAT",
+    venue: "Kingston Springs Farmers Market",
+    location: "Kingston Springs, TN",
+    time: "8:00 AM",
   },
   {
-    name: "Nashville Farmers Market",
-    schedule: "Select Saturdays",
-    note: "Check Instagram for dates.",
+    date: "MAR 22",
+    day: "SAT",
+    venue: "Kingston Springs Farmers Market",
+    location: "Kingston Springs, TN",
+    time: "8:00 AM",
   },
   {
-    name: "Cheatham County Fall Festival",
-    schedule: "October · Annual",
-    note: "Ashland City, TN",
+    date: "APR 5",
+    day: "SAT",
+    venue: "Nashville Farmers Market",
+    location: "Nashville, TN",
+    time: "9:00 AM",
+  },
+  {
+    date: "APR 12",
+    day: "SAT",
+    venue: "Kingston Springs Farmers Market",
+    location: "Kingston Springs, TN",
+    time: "8:00 AM",
+  },
+  {
+    date: "OCT 18",
+    day: "SAT",
+    venue: "Cheatham County Fall Festival",
+    location: "Ashland City, TN",
+    time: "10:00 AM",
   },
 ];
 ---
 
-<section class="shop" id="shop">
+<section class="dates" id="shop">
   <div class="container">
 
     <div class="divider">
       <span class="divider-symbol">✦</span>
     </div>
 
-    <span class="eyebrow">Come Find Us</span>
-    <h2 class="shop__title">Where to Shop</h2>
-    <p class="shop__intro">
-      We sell at local farmers markets and festivals around Middle Tennessee. Follow us on Instagram or check back here for updated dates.
-    </p>
+    <span class="eyebrow">Upcoming</span>
+    <h2 class="dates__title">Tour Dates</h2>
 
-    <ul class="shop__list">
-      {markets.map((m) => (
-        <li class="shop__item">
-          <div class="shop__item-main">
-            <span class="shop__item-name">{m.name}</span>
-            <span class="shop__item-schedule">{m.schedule}</span>
+    <div class="dates__list">
+      {dates.map((d) => (
+        <div class="dates__row">
+          <div class="dates__date-block">
+            <span class="dates__month-day">{d.date}</span>
+            <span class="dates__day-name">{d.day}</span>
           </div>
-          <p class="shop__item-note script">{m.note}</p>
-        </li>
+          <div class="dates__venue-block">
+            <span class="dates__venue">{d.venue}</span>
+            <span class="dates__location">{d.location}</span>
+          </div>
+          <div class="dates__time-block">
+            <span class="dates__time">{d.time}</span>
+          </div>
+        </div>
       ))}
-    </ul>
-
-    <div class="shop__cta">
-      <p>Can't make it to a market? We take local orders — just reach out.</p>
-      <a href="#orders" class="btn btn-rose">Place an Order</a>
     </div>
+
+    <p class="dates__note">Follow us on Instagram for last-minute pop-ups and market updates.</p>
 
   </div>
 </section>
 
 <style>
-  .shop {
+  .dates {
     padding-block: var(--section-pad);
     background: var(--color-white);
   }
 
-  .shop__title {
+  .dates__title {
     font-family: var(--font-heading);
     font-size: clamp(1.75rem, 4vw, 2.5rem);
     font-weight: 700;
     color: var(--color-brown);
-    margin-bottom: 1rem;
-  }
-
-  .shop__intro {
-    font-size: 1rem;
-    color: var(--color-text-muted);
-    line-height: 1.8;
     margin-bottom: 2.5rem;
   }
 
-  /* List */
-  .shop__list {
-    list-style: none;
+  .dates__list {
     display: flex;
     flex-direction: column;
-    border-top: 1px solid var(--color-border);
-    margin-bottom: 3rem;
+    border-top: 2px solid var(--color-brown);
+    margin-bottom: 2rem;
   }
 
-  .shop__item {
-    display: flex;
-    justify-content: space-between;
+  .dates__row {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
     align-items: center;
-    gap: 1.5rem;
-    padding-block: 1.5rem;
+    gap: 2rem;
+    padding-block: 1.25rem;
     border-bottom: 1px solid var(--color-border);
+    transition: background 0.2s ease;
   }
 
-  .shop__item-main {
+  .dates__row:hover {
+    background: var(--color-cream);
+  }
+
+  .dates__date-block {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0;
   }
 
-  .shop__item-name {
+  .dates__month-day {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--color-brown);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+  }
+
+  .dates__day-name {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .dates__venue-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .dates__venue {
     font-family: var(--font-heading);
     font-size: 1rem;
     font-weight: 600;
     color: var(--color-brown);
   }
 
-  .shop__item-schedule {
+  .dates__location {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.03em;
+  }
+
+  .dates__time-block {
+    text-align: right;
+  }
+
+  .dates__time {
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .shop__item-note {
-    font-family: var(--font-script);
-    font-size: 0.95rem;
     color: var(--color-rose-dark);
-    text-align: right;
-    flex-shrink: 0;
   }
 
-  /* CTA */
-  .shop__cta {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-  }
-
-  .shop__cta p {
+  .dates__note {
+    font-family: var(--font-script);
     font-size: 1rem;
     color: var(--color-text-muted);
-    flex: 1;
-    min-width: 200px;
+    margin-top: 1rem;
   }
 
   @media (max-width: 540px) {
-    .shop__item {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.4rem;
+    .dates__row {
+      grid-template-columns: 80px 1fr;
+      gap: 1rem;
     }
 
-    .shop__item-note { text-align: left; }
-
-    .shop__cta { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+    .dates__time-block {
+      grid-column: 2;
+      text-align: left;
+      margin-top: -0.5rem;
+    }
   }
 </style>
