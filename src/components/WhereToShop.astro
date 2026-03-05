@@ -1,41 +1,19 @@
 ---
-const dates = [
-  {
-    date: "MAR 15",
-    day: "SAT",
-    venue: "Kingston Springs Farmers Market",
-    location: "Kingston Springs, TN",
-    time: "8:00 AM",
-  },
-  {
-    date: "MAR 22",
-    day: "SAT",
-    venue: "Kingston Springs Farmers Market",
-    location: "Kingston Springs, TN",
-    time: "8:00 AM",
-  },
-  {
-    date: "APR 5",
-    day: "SAT",
-    venue: "Nashville Farmers Market",
-    location: "Nashville, TN",
-    time: "9:00 AM",
-  },
-  {
-    date: "APR 12",
-    day: "SAT",
-    venue: "Kingston Springs Farmers Market",
-    location: "Kingston Springs, TN",
-    time: "8:00 AM",
-  },
-  {
-    date: "OCT 18",
-    day: "SAT",
-    venue: "Cheatham County Fall Festival",
-    location: "Ashland City, TN",
-    time: "10:00 AM",
-  },
-];
+interface Stop {
+  id: string;
+  date: string;
+  day: string;
+  venue: string;
+  location: string;
+  time: string;
+}
+
+interface Props {
+  stops: Stop[];
+  newsletterText: string;
+}
+
+const { stops, newsletterText } = Astro.props;
 ---
 
 <section class="dates" id="shop">
@@ -49,7 +27,7 @@ const dates = [
     <h2 class="dates__title">Next Stops</h2>
 
     <div class="dates__list">
-      {dates.map((d) => (
+      {stops.map((d) => (
         <div class="dates__row">
           <div class="dates__date-block">
             <span class="dates__month-day">{d.date}</span>
@@ -67,7 +45,7 @@ const dates = [
     </div>
 
     <div class="dates__signup">
-      <p class="dates__signup-text">Stay in the know — new items, next stops, and seasonal specials delivered to your&nbsp;inbox.</p>
+      <p class="dates__signup-text">{newsletterText}</p>
       <form class="dates__form" action="#" method="POST">
         <input type="email" name="email" placeholder="Your email address" required class="dates__input" />
         <button type="submit" class="btn btn-rose">Sign Up</button>

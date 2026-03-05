@@ -1,0 +1,167 @@
+---
+export const prerender = false;
+import { checkAuth } from '../../lib/auth';
+
+if (checkAuth(Astro.request)) {
+  return Astro.redirect('/admin');
+}
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Zuzzkin's Kitchen</title>
+  <link rel="icon" type="image/jpeg" href="/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Dancing+Script:wght@600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-cream: #FFF8F0;
+      --color-white: #FFFFFF;
+      --color-rose: #D4A0A0;
+      --color-rose-dark: #B8736D;
+      --color-rose-light: #EDD8D8;
+      --color-brown: #3D2B1F;
+      --color-text-muted: #9A7A6A;
+      --color-border: #EDE0D4;
+      --font-heading: 'Playfair Display', Georgia, serif;
+      --font-script: 'Dancing Script', cursive;
+      --font-body: 'Lato', sans-serif;
+    }
+    body {
+      font-family: var(--font-body);
+      background: var(--color-cream);
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .login-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      padding: 3rem 2.5rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .login-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1.5rem;
+      border: 1px solid var(--color-border);
+    }
+    .login-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: var(--color-brown);
+      margin-bottom: 0.4rem;
+    }
+    .login-sub {
+      font-family: var(--font-script);
+      font-size: 1rem;
+      color: var(--color-rose-dark);
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+    label {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--color-brown);
+      margin-bottom: 0.4rem;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--color-border);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--color-brown);
+      background: var(--color-cream);
+      outline: none;
+    }
+    input[type="password"]:focus {
+      border-color: var(--color-rose);
+    }
+    .btn {
+      width: 100%;
+      padding: 0.9rem 2rem;
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1.5px solid var(--color-rose);
+      color: var(--color-rose-dark);
+      background: transparent;
+      margin-top: 0.5rem;
+    }
+    .btn:hover {
+      background: var(--color-rose);
+      color: white;
+    }
+    .error {
+      color: var(--color-rose-dark);
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <img src="/logo.jpg" alt="Zuzzkin's Kitchen" class="login-logo" />
+    <h1 class="login-title">Kitchen Admin</h1>
+    <p class="login-sub">Zuzzkin's Kitchen</p>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter password" required autofocus />
+      </div>
+      <button type="submit" class="btn">Sign In</button>
+      <p class="error" id="loginError">Wrong password. Try again.</p>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm') as HTMLFormElement;
+    const errorEl = document.getElementById('loginError') as HTMLParagraphElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = (document.getElementById('password') as HTMLInputElement).value;
+      const btn = form.querySelector('button') as HTMLButtonElement;
+      btn.textContent = 'Signing in…';
+      btn.disabled = true;
+
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      if (res.ok) {
+        window.location.href = '/admin';
+      } else {
+        errorEl.style.display = 'block';
+        btn.textContent = 'Sign In';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

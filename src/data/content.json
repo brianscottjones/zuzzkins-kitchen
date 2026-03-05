@@ -1,0 +1,73 @@
+{
+  "site": {
+    "location": "Kingston Springs, TN",
+    "tagline": "Always Homemade",
+    "contactEmail": "hello@zuzzkinskitchen.com",
+    "contactIntro": "Questions about an order? Just want to say hi? We'd love to hear from you.",
+    "newsletterText": "Join the Rat Pack — new items, next stops, and seasonal specials delivered to your inbox."
+  },
+  "stops": [
+    {
+      "id": "1",
+      "date": "MAR 15",
+      "day": "SAT",
+      "venue": "Kingston Springs Farmers Market",
+      "location": "Kingston Springs, TN",
+      "time": "8:00 AM"
+    },
+    {
+      "id": "2",
+      "date": "MAR 22",
+      "day": "SAT",
+      "venue": "Kingston Springs Farmers Market",
+      "location": "Kingston Springs, TN",
+      "time": "8:00 AM"
+    },
+    {
+      "id": "3",
+      "date": "APR 5",
+      "day": "SAT",
+      "venue": "Nashville Farmers Market",
+      "location": "Nashville, TN",
+      "time": "9:00 AM"
+    },
+    {
+      "id": "4",
+      "date": "APR 12",
+      "day": "SAT",
+      "venue": "Kingston Springs Farmers Market",
+      "location": "Kingston Springs, TN",
+      "time": "8:00 AM"
+    },
+    {
+      "id": "5",
+      "date": "OCT 18",
+      "day": "SAT",
+      "venue": "Cheatham County Fall Festival",
+      "location": "Ashland City, TN",
+      "time": "10:00 AM"
+    }
+  ],
+  "photos": [
+    {
+      "id": "1",
+      "src": "/flower-cake.jpg",
+      "alt": "Two-tier lemon cake with edible cosmos flowers, raspberries, and lemon slices"
+    },
+    {
+      "id": "2",
+      "src": "/cake.jpg",
+      "alt": "Victoria sponge cake with fresh berries and cream"
+    },
+    {
+      "id": "3",
+      "src": "/brownies.jpg",
+      "alt": "Stack of homemade brownies on a vintage floral plate"
+    },
+    {
+      "id": "4",
+      "src": "/preserves.jpg",
+      "alt": "Chilli Jam, Pickles, Chutney, Salsa"
+    }
+  ]
+}

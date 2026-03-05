@@ -1,10 +1,15 @@
 ---
+export const prerender = false; // SSR so content.json changes show immediately
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import WhereToShop from '../components/WhereToShop.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
+import { readContent } from '../lib/content';
 import '../styles/global.css';
+
+const content = readContent();
+const { photos, stops, site } = content;
 ---
 
 <Layout
@@ -12,26 +17,26 @@ import '../styles/global.css';
   description="Handmade cakes, baked goods, preserves, pickles, and jams from Kingston Springs, Tennessee. Always homemade, always made with love."
 >
   <main>
-    <Hero />
+    <Hero tagline={site.tagline} location={site.location} />
 
     <section class="gallery">
       <div class="container">
         <div class="gallery__grid">
-          <div class="gallery__item gallery__item--feature">
-            <img src="/cake.jpg" alt="Victoria sponge cake with fresh berries and cream on a white cake stand" />
-          </div>
-          <div class="gallery__item gallery__item--small">
-            <img src="/brownies.jpg" alt="Stack of homemade brownies on a vintage floral plate" />
-          </div>
-          <div class="gallery__item gallery__item--small">
-            <img src="/preserves.jpg" alt="Chilli Jam, Dill Pickles, Green Tomato Chutney, and Salsa" />
-          </div>
+          {photos.map((photo: { id: string; src: string; alt: string }) => (
+            <div class="gallery__item">
+              <img src={photo.src} alt={photo.alt} />
+            </div>
+          ))}
         </div>
       </div>
     </section>
 
-    <WhereToShop />
-    <Contact />
+    <WhereToShop stops={stops} newsletterText={site.newsletterText} />
+    <Contact
+      contactIntro={site.contactIntro}
+      location={site.location}
+      contactEmail={site.contactEmail}
+    />
   </main>
   <Footer />
 </Layout>

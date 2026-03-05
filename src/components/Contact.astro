@@ -1,4 +1,11 @@
 ---
+interface Props {
+  contactIntro: string;
+  location: string;
+  contactEmail: string;
+}
+
+const { contactIntro, location, contactEmail } = Astro.props;
 ---
 
 <section class="contact" id="contact">
@@ -11,20 +18,19 @@
     <span class="eyebrow">Say Hello</span>
     <h2 class="contact__title">Get in Touch</h2>
     <p class="contact__intro">
-      Questions about an order? Want to carry our goods in your shop? Just want to say hi? We'd love to hear from you.
+      {contactIntro}
     </p>
 
     <!-- Contact details -->
     <ul class="contact__details">
       <li>
         <span class="contact__detail-label">Location</span>
-        <span>Kingston Springs, Tennessee</span>
+        <span>{location}</span>
       </li>
       <li>
         <span class="contact__detail-label">Email</span>
-        <a href="mailto:hello@zuzzkinskitchen.com">hello@zuzzkinskitchen.com</a>
+        <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
       </li>
-
     </ul>
 
     <!-- Contact form -->
