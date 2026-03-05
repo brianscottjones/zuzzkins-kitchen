@@ -1,45 +1,31 @@
 /* ============================================================
    Zuzzkin's Kitchen — Global Styles
-   Vintage cottage / Southern gothic / whimsical farmhouse
+   Minimal, airy, handcrafted artisan bakery
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Dancing+Script:wght@400;600;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Dancing+Script:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
 
 /* ── Custom Properties ── */
 :root {
-  /* Colors */
   --color-cream:      #FFF8F0;
-  --color-bone:       #F0E8DC;
+  --color-white:      #FFFFFF;
+  --color-bone:       #F5EDE0;
   --color-rose:       #D4A0A0;
   --color-rose-dark:  #B8736D;
-  --color-rose-light: #ECC8C8;
+  --color-rose-light: #EDD8D8;
   --color-sage:       #9CAF88;
   --color-sage-dark:  #7A9066;
-  --color-sage-light: #C8D8BA;
-  --color-yellow:     #E8D88A;
-  --color-peach:      #F0C098;
-  --color-sky:        #A8C8D8;
-  --color-brown:      #6B4C3B;
+  --color-brown:      #3D2B1F;
   --color-text:       #3D2B1F;
-  --color-text-muted: #8A6A58;
+  --color-text-muted: #9A7A6A;
+  --color-border:     #EDE0D4;
 
-  /* Typography */
   --font-heading: 'Playfair Display', Georgia, serif;
   --font-script:  'Dancing Script', cursive;
   --font-body:    'Lato', 'Helvetica Neue', sans-serif;
 
-  /* Spacing */
-  --section-pad: clamp(4rem, 8vw, 8rem);
-  --container:   min(1100px, 90vw);
-
-  /* Borders & radii */
-  --radius-sm: 4px;
-  --radius-md: 12px;
-  --radius-lg: 24px;
-
-  /* Shadows */
-  --shadow-soft: 0 4px 24px rgba(61, 43, 31, 0.10);
-  --shadow-card: 0 2px 12px rgba(61, 43, 31, 0.12);
+  --section-pad: clamp(5rem, 10vw, 9rem);
+  --container:   min(680px, 90vw);
 }
 
 /* ── Reset ── */
@@ -54,143 +40,156 @@ body {
   font-family: var(--font-body);
   background-color: var(--color-cream);
   color: var(--color-text);
-  line-height: 1.7;
+  line-height: 1.8;
   overflow-x: hidden;
 }
 
 img { max-width: 100%; display: block; }
-
 a { color: inherit; text-decoration: none; }
 
-/* ── Utility ── */
+/* ── Container ── */
 .container {
   width: var(--container);
   margin-inline: auto;
 }
 
-.section-pad {
-  padding-block: var(--section-pad);
-}
-
-.script {
-  font-family: var(--font-script);
-}
-
-.serif {
+/* ── Typography ── */
+h1, h2, h3 {
   font-family: var(--font-heading);
-}
-
-/* ── Headings ── */
-h1, h2, h3, h4 {
-  font-family: var(--font-heading);
-  line-height: 1.2;
+  line-height: 1.25;
   color: var(--color-brown);
 }
 
-/* ── Decorative Divider ── */
+/* ── Thin botanical divider ── */
 .divider {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-block: 1.5rem;
+  gap: 1.5rem;
+  margin-block: 2.5rem;
+  color: var(--color-rose);
 }
+
 .divider::before,
 .divider::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-rose), transparent);
+  background: var(--color-border);
 }
-.divider span {
-  font-size: 1.2rem;
+
+.divider-symbol {
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
   color: var(--color-rose);
   white-space: nowrap;
 }
 
-/* ── Section label ── */
-.section-label {
-  font-family: var(--font-script);
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
-  color: var(--color-sage-dark);
+/* ── Subtle section label ── */
+.eyebrow {
   display: block;
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.03em;
-}
-
-/* ── Section title ── */
-.section-title {
-  font-family: var(--font-heading);
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 900;
-  color: var(--color-brown);
-  line-height: 1.15;
-  margin-bottom: 1rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-sage-dark);
+  margin-bottom: 0.75rem;
 }
 
 /* ── Buttons ── */
 .btn {
   display: inline-block;
-  padding: 0.8rem 2rem;
-  border-radius: var(--radius-sm);
   font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.04em;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.85rem 2.25rem;
+  border: 1.5px solid currentColor;
   cursor: pointer;
-  border: 2px solid transparent;
   transition: all 0.2s ease;
   text-align: center;
+  background: transparent;
 }
 
-.btn-primary {
+.btn-rose {
+  color: var(--color-rose-dark);
+  border-color: var(--color-rose);
+}
+.btn-rose:hover {
   background: var(--color-rose);
   color: #fff;
-  border-color: var(--color-rose);
-}
-.btn-primary:hover {
-  background: var(--color-rose-dark);
-  border-color: var(--color-rose-dark);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-card);
-}
-
-.btn-outline {
-  background: transparent;
-  color: var(--color-rose);
-  border-color: var(--color-rose);
-}
-.btn-outline:hover {
-  background: var(--color-rose-light);
-  transform: translateY(-1px);
 }
 
 .btn-sage {
-  background: var(--color-sage);
-  color: #fff;
+  color: var(--color-sage-dark);
   border-color: var(--color-sage);
 }
 .btn-sage:hover {
-  background: var(--color-sage-dark);
-  border-color: var(--color-sage-dark);
-  transform: translateY(-1px);
+  background: var(--color-sage);
+  color: #fff;
 }
 
-/* ── Vintage border ornament ── */
-.ornament-border {
-  border: 2px solid var(--color-sage-light);
-  border-radius: var(--radius-md);
-  position: relative;
+.btn-dark {
+  color: var(--color-brown);
+  border-color: var(--color-brown);
 }
-.ornament-border::before {
-  content: '✦';
-  position: absolute;
-  top: -0.7em;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--color-cream);
-  padding: 0 0.5rem;
-  color: var(--color-sage);
-  font-size: 1.1rem;
+.btn-dark:hover {
+  background: var(--color-brown);
+  color: var(--color-cream);
+}
+
+/* ── Form fields ── */
+label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-brown);
+  margin-bottom: 0.4rem;
+}
+
+.req { color: var(--color-rose-dark); }
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 0.7rem 0.9rem;
+  width: 100%;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-rose);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+textarea { resize: vertical; min-height: 110px; }
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239A7A6A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.25rem;
+  cursor: pointer;
 }
 
 /* ── Selection ── */
@@ -199,7 +198,7 @@ h1, h2, h3, h4 {
   color: var(--color-brown);
 }
 
-/* ── Scrollbar (webkit) ── */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--color-bone); }
-::-webkit-scrollbar-thumb { background: var(--color-rose); border-radius: 4px; }
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-cream); }
+::-webkit-scrollbar-thumb { background: var(--color-rose); }

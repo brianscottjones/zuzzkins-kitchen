@@ -1,207 +1,100 @@
 ---
-// Placeholder gallery items — replace with real photos
 const items = [
-  { id: 1, label: 'Seasonal Layer Cake',     emoji: '🎂', color: '#ECC8C8', accent: '#D4A0A0' },
-  { id: 2, label: 'Strawberry Preserves',    emoji: '🍓', color: '#F0C098', accent: '#E8B884' },
-  { id: 3, label: 'Bread & Butter Pickles',  emoji: '🥒', color: '#C8D8BA', accent: '#9CAF88' },
-  { id: 4, label: 'Blackberry Jam',          emoji: '🫙', color: '#C8B8D8', accent: '#9A88B8' },
-  { id: 5, label: 'Apple Butter',            emoji: '🍎', color: '#F0D0A0', accent: '#D4A854' },
-  { id: 6, label: 'Carrot Cake',             emoji: '🥕', color: '#F0C098', accent: '#D48A50' },
-  { id: 7, label: 'Peach Jam',               emoji: '🍑', color: '#F5D0A0', accent: '#E8A060' },
-  { id: 8, label: 'Dill Pickles',            emoji: '🌿', color: '#C8D8BA', accent: '#7A9066' },
-  { id: 9, label: 'Lemon Curd',              emoji: '🍋', color: '#F0E8A0', accent: '#C8C048' },
+  { id: 1, label: 'Seasonal Layer Cake' },
+  { id: 2, label: 'Strawberry Preserves' },
+  { id: 3, label: 'Bread & Butter Pickles' },
+  { id: 4, label: 'Blackberry Jam' },
+  { id: 5, label: 'Apple Butter' },
+  { id: 6, label: 'Carrot Cake' },
 ];
 ---
 
-<section class="gallery section-pad" id="photos">
-  <div class="gallery__bg" aria-hidden="true">
-    <svg viewBox="0 0 1440 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      <path d="M0,100 C480,0 960,200 1440,100 L1440,200 L0,200 Z" fill="#FFF8F0"/>
-    </svg>
-  </div>
-
+<section class="gallery" id="photos">
   <div class="container">
-    <div class="section-header">
-      <span class="section-label">Made with love</span>
-      <h2 class="section-title">From Our Kitchen</h2>
-      <p class="section-intro">
-        Every item is handmade in small batches — no shortcuts, no preservatives, no shortcuts.
-        Just real ingredients and old recipes done right.
-      </p>
-      <div class="divider"><span>✦ ✦ ✦</span></div>
+
+    <div class="divider">
+      <span class="divider-symbol">✦</span>
     </div>
+
+    <span class="eyebrow">From Our Kitchen</span>
+    <h2 class="gallery__title">Made with Love</h2>
+    <p class="gallery__intro">
+      Every item is made fresh in small batches — no shortcuts, no preservatives. Just real ingredients and old recipes done right.
+    </p>
 
     <div class="gallery__grid">
       {items.map((item) => (
-        <div class="gallery__card" style={`--card-color: ${item.color}; --card-accent: ${item.accent};`}>
-          <div class="gallery__img-wrap">
-            <div class="gallery__placeholder">
-              <span class="gallery__emoji">{item.emoji}</span>
-            </div>
-            <div class="gallery__overlay">
-              <span class="gallery__overlay-text script">Photo coming soon</span>
-            </div>
-          </div>
+        <div class="gallery__cell">
+          <div class="gallery__placeholder" aria-label={item.label}></div>
           <p class="gallery__label">{item.label}</p>
         </div>
       ))}
     </div>
 
-    <p class="gallery__note script">
-      ✦ &nbsp; More photos coming soon — follow along on social for the freshest updates &nbsp; ✦
-    </p>
+    <p class="gallery__note">Photos coming soon — follow along on Instagram for the freshest updates.</p>
+
   </div>
 </section>
 
 <style>
   .gallery {
-    background: var(--color-bone);
-    position: relative;
-    padding-top: calc(var(--section-pad) + 2rem);
+    padding-block: var(--section-pad);
+    background: var(--color-cream);
   }
 
-  .gallery__bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 200px;
-    line-height: 0;
+  .gallery__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-brown);
+    margin-bottom: 1rem;
   }
 
-  .gallery__bg svg { width: 100%; height: 100%; }
-
-  .section-header {
-    text-align: center;
+  .gallery__intro {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    max-width: 480px;
     margin-bottom: 3rem;
   }
 
-  .section-intro {
-    max-width: 560px;
-    margin-inline: auto;
-    color: var(--color-text-muted);
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-top: 0.75rem;
-  }
-
-  /* Grid */
   .gallery__grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
   }
 
-  /* Card */
-  .gallery__card {
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    background: var(--color-cream);
-    border: 2px solid var(--card-color, var(--color-rose-light));
-    box-shadow: var(--shadow-card);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .gallery__card:hover {
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: 0 8px 32px rgba(61, 43, 31, 0.18);
-  }
-
-  /* First card spans 2 cols */
-  .gallery__card:nth-child(1),
-  .gallery__card:nth-child(5) {
-    grid-column: span 2;
-  }
-
-  .gallery__img-wrap {
-    position: relative;
-    aspect-ratio: 4/3;
-    overflow: hidden;
-  }
-
-  .gallery__card:nth-child(1) .gallery__img-wrap,
-  .gallery__card:nth-child(5) .gallery__img-wrap {
-    aspect-ratio: 16/9;
+  .gallery__cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .gallery__placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--card-color, #ECC8C8) 0%, var(--card-accent, #D4A0A0) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .gallery__emoji {
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    line-height: 1;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
-    transition: transform 0.3s ease;
-  }
-
-  .gallery__card:hover .gallery__emoji {
-    transform: scale(1.15) rotate(-3deg);
-  }
-
-  /* Hover overlay */
-  .gallery__overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(61, 43, 31, 0.55);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .gallery__card:hover .gallery__overlay { opacity: 1; }
-
-  .gallery__overlay-text {
-    color: white;
-    font-size: 1.1rem;
-    letter-spacing: 0.02em;
+    aspect-ratio: 1;
+    background: var(--color-bone);
+    border: 1px solid var(--color-border);
   }
 
   .gallery__label {
     font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--color-brown);
-    padding: 0.6rem 1rem;
-    text-align: center;
-    letter-spacing: 0.02em;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    letter-spacing: 0.03em;
   }
 
   .gallery__note {
-    text-align: center;
+    font-family: var(--font-script);
+    font-size: 1rem;
     color: var(--color-text-muted);
-    font-size: 1.05rem;
-    margin-top: 2.5rem;
-    letter-spacing: 0.02em;
+    margin-top: 1rem;
   }
 
-  /* Responsive */
-  @media (max-width: 768px) {
+  @media (max-width: 540px) {
     .gallery__grid {
       grid-template-columns: repeat(2, 1fr);
-    }
-
-    .gallery__card:nth-child(1),
-    .gallery__card:nth-child(5) {
-      grid-column: span 2;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .gallery__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .gallery__card:nth-child(1),
-    .gallery__card:nth-child(5) {
-      grid-column: span 1;
     }
   }
 </style>
