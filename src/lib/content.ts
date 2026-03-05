@@ -3,12 +3,19 @@ import { fileURLToPath } from 'url';
 import { dirname, join, resolve } from 'path';
 
 function resolveContentPath(): string {
+  // Always try cwd-based path first (works in both dev and build)
+  const cwdPath = resolve(process.cwd(), 'src/data/content.json');
+  try {
+    readFileSync(cwdPath, 'utf-8');
+    return cwdPath;
+  } catch {}
+  
   try {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
     return join(__dirname, '../data/content.json');
   } catch {
-    return resolve(process.cwd(), 'src/data/content.json');
+    return cwdPath;
   }
 }
 
