@@ -4,50 +4,9 @@
     "tagline": "Always Homemade",
     "contactEmail": "hello@zuzzkinskitchen.com",
     "contactIntro": "Questions about an order? Just want to say hi? We'd love to hear from you.",
-    "newsletterText": "Join the Rat Pack — new items, next stops, and seasonal specials delivered to your inbox."
+    "newsletterText": "Sign up for the Rat Pack newsletter to be the first to know when and where we\u2019ll be next!"
   },
-  "stops": [
-    {
-      "id": "1",
-      "date": "MAR 15",
-      "day": "SAT",
-      "venue": "Kingston Springs Farmers Market",
-      "location": "Kingston Springs, TN",
-      "time": "8:00 AM"
-    },
-    {
-      "id": "2",
-      "date": "MAR 22",
-      "day": "SAT",
-      "venue": "Kingston Springs Farmers Market",
-      "location": "Kingston Springs, TN",
-      "time": "8:00 AM"
-    },
-    {
-      "id": "3",
-      "date": "APR 5",
-      "day": "SAT",
-      "venue": "Nashville Farmers Market",
-      "location": "Nashville, TN",
-      "time": "9:00 AM"
-    },
-    {
-      "id": "4",
-      "date": "APR 12",
-      "day": "SAT",
-      "venue": "Kingston Springs Farmers Market",
-      "location": "Kingston Springs, TN",
-      "time": "8:00 AM"
-    },
-    {
-      "id": "5",
-      "date": "OCT 18",
-      "day": "SAT",
-      "venue": "Cheatham County Fall Festival",
-      "location": "Ashland City, TN",
-      "time": "10:00 AM"
-    }
-  ],
+  "stops": [],
   "photos": [
     {
       "id": "1",

@@ -26,23 +26,27 @@ const { stops, newsletterText } = Astro.props;
     <span class="eyebrow">Upcoming</span>
     <h2 class="dates__title">Next Stops</h2>
 
-    <div class="dates__list">
-      {stops.map((d) => (
-        <div class="dates__row">
-          <div class="dates__date-block">
-            <span class="dates__month-day">{d.date}</span>
-            <span class="dates__day-name">{d.day}</span>
+    {stops.length > 0 ? (
+      <div class="dates__list">
+        {stops.map((d) => (
+          <div class="dates__row">
+            <div class="dates__date-block">
+              <span class="dates__month-day">{d.date}</span>
+              <span class="dates__day-name">{d.day}</span>
+            </div>
+            <div class="dates__venue-block">
+              <span class="dates__venue">{d.venue}</span>
+              <span class="dates__location">{d.location}</span>
+            </div>
+            <div class="dates__time-block">
+              <span class="dates__time">{d.time}</span>
+            </div>
           </div>
-          <div class="dates__venue-block">
-            <span class="dates__venue">{d.venue}</span>
-            <span class="dates__location">{d.location}</span>
-          </div>
-          <div class="dates__time-block">
-            <span class="dates__time">{d.time}</span>
-          </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    ) : (
+      <p class="dates__empty">No upcoming markets — stay tuned!</p>
+    )}
 
     <div class="dates__signup">
       <p class="dates__signup-text">{newsletterText}</p>
@@ -142,6 +146,17 @@ const { stops, newsletterText } = Astro.props;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-rose-dark);
+  }
+
+  .dates__empty {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: 2.5rem 1rem;
+    border-top: 2px solid var(--color-brown);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 2rem;
   }
 
   .dates__signup {
