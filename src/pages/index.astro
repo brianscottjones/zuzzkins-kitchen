@@ -19,7 +19,7 @@ const { photos, stops, site } = content;
   <main>
     <Hero tagline={site.tagline} location={site.location} />
 
-    <section class="gallery">
+    <section class="gallery" style="padding-bottom: clamp(2rem, 4vw, 3rem);">
       <div class="container">
         <div class="gallery__grid">
           {photos.map((photo: { id: string; src: string; alt: string }) => (
