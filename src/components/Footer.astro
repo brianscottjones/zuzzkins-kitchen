@@ -1,4 +1,9 @@
 ---
+interface Props {
+  contactEmail?: string;
+}
+
+const { contactEmail } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
@@ -20,6 +25,12 @@ const year = new Date().getFullYear();
 
 
     </div>
+
+    {contactEmail && (
+      <p class="footer__email">
+        <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+      </p>
+    )}
 
     <p class="footer__copy">© {year} Zuzzkin's Kitchen · Always Homemade</p>
 
@@ -80,6 +91,24 @@ const year = new Date().getFullYear();
   }
 
 
+
+  .footer__email {
+    text-align: center;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .footer__email a {
+    color: var(--color-rose-dark);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+  }
+
+  .footer__email a:hover {
+    color: var(--color-brown);
+  }
 
   .footer__copy {
     text-align: center;

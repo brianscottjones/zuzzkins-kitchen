@@ -34,9 +34,7 @@ const { photos, stops, site } = content;
     <WhereToShop stops={stops} newsletterText={site.newsletterText} />
     <Contact
       contactIntro={site.contactIntro}
-      location={site.location}
-      contactEmail={site.contactEmail}
     />
   </main>
-  <Footer />
+  <Footer contactEmail={site.contactEmail} />
 </Layout>
