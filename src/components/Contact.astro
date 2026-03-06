@@ -33,8 +33,8 @@ const { contactIntro, location, contactEmail } = Astro.props;
       </li>
     </ul>
 
-    <!-- Contact form -->
-    <form class="contact__form" id="contactForm" novalidate>
+    <!-- Contact form — action will be updated with Formspree endpoint once email is set up -->
+    <form class="contact__form" id="contactForm" action="https://formspree.io/f/PLACEHOLDER" method="POST" novalidate>
 
       <div class="form-row">
         <div class="form-group">
@@ -197,7 +197,20 @@ const { contactIntro, location, contactEmail } = Astro.props;
     btn.textContent = 'Sending…';
     btn.disabled = true;
 
-    await new Promise(r => setTimeout(r, 1000));
+    // Submit to Formspree (or fake it if PLACEHOLDER still set)
+    const action = form.getAttribute('action') || '';
+    if (action.includes('PLACEHOLDER')) {
+      // Not configured yet — just show success
+      await new Promise(r => setTimeout(r, 800));
+    } else {
+      try {
+        await fetch(action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' },
+        });
+      } catch (_) {}
+    }
 
     form.reset();
     btn.style.display = 'none';
