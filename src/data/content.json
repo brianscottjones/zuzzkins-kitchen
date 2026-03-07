@@ -27,6 +27,11 @@
       "id": "4",
       "src": "/preserves.jpg",
       "alt": "Chilli Jam, Pickles, Chutney, Salsa"
+    },
+    {
+      "id": "5",
+      "src": "/zucchini-bread.jpg",
+      "alt": "Zucchini bread"
     }
   ]
 }
