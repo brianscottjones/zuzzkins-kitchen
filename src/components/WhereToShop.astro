@@ -49,6 +49,8 @@ const { stops, newsletterText } = Astro.props;
     )}
 
     <div class="dates__signup">
+      <h3 class="dates__signup-heading">Join the Rat Pack</h3>
+      <p class="dates__signup-text">Sign up for news and scheduling updates.</p>
       <form class="dates__form" action="#" method="POST">
         <input type="email" name="email" placeholder="Join the mailing list" required class="dates__input" />
         <button type="submit" class="btn btn-rose">Sign Up</button>
@@ -163,6 +165,14 @@ const { stops, newsletterText } = Astro.props;
     margin-top: 2.5rem;
     padding-top: 2rem;
     border-top: 1px solid var(--color-border);
+  }
+
+  .dates__signup-heading {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-brown);
+    margin-bottom: 0.5rem;
   }
 
   .dates__signup-text {
