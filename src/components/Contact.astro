@@ -21,7 +21,12 @@ const { contactIntro } = Astro.props;
     </p>
 
     <!-- Contact form — action will be updated with Formspree endpoint once email is set up -->
-    <form class="contact__form" id="contactForm" action="https://formspree.io/f/PLACEHOLDER" method="POST" novalidate>
+    <form class="contact__form" id="contactForm" action="https://formsubmit.co/hello@zuzzkins.com" method="POST" novalidate>
+
+      <input type="hidden" name="_subject" value="New message from Zuzzkin's Kitchen website" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_next" value="https://zuzzkins.com" />
+      <input type="text" name="_honey" style="display:none" />
 
       <div class="form-row">
         <div class="form-group">
@@ -138,20 +143,14 @@ const { contactIntro } = Astro.props;
     btn.textContent = 'Sending…';
     btn.disabled = true;
 
-    // Submit to Formspree (or fake it if PLACEHOLDER still set)
     const action = form.getAttribute('action') || '';
-    if (action.includes('PLACEHOLDER')) {
-      // Not configured yet — just show success
-      await new Promise(r => setTimeout(r, 800));
-    } else {
-      try {
-        await fetch(action, {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { 'Accept': 'application/json' },
-        });
-      } catch (_) {}
-    }
+    try {
+      await fetch(action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' },
+      });
+    } catch (_) {}
 
     form.reset();
     btn.style.display = 'none';

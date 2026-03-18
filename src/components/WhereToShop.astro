@@ -51,10 +51,34 @@ const { stops, newsletterText } = Astro.props;
     <div class="dates__signup">
       <h3 class="dates__signup-heading">Join the Rat Pack</h3>
       <p class="dates__signup-text">Sign up for news and scheduling updates.</p>
-      <form class="dates__form" action="#" method="POST">
+      <form class="dates__form" id="ratPackForm" action="https://formsubmit.co/hello@zuzzkins.com" method="POST">
+        <input type="hidden" name="_subject" value="🐀 New Rat Pack signup!" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_next" value="https://zuzzkins.com" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="text" name="_honey" style="display:none" />
         <input type="email" name="email" placeholder="Join the mailing list" required class="dates__input" />
-        <button type="submit" class="btn btn-rose">Sign Up</button>
+        <button type="submit" class="btn btn-rose" id="ratPackBtn">Sign Up</button>
+        <p class="ratpack-success" id="ratPackSuccess" hidden style="color: var(--color-sage-dark); font-family: var(--font-script); margin-top: 0.5rem;">Welcome to the Rat Pack! 🐀</p>
       </form>
+      <script>
+        const rpForm = document.getElementById('ratPackForm') as HTMLFormElement;
+        const rpBtn = document.getElementById('ratPackBtn') as HTMLButtonElement;
+        const rpSuccess = document.getElementById('ratPackSuccess')!;
+        rpForm?.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const emailInput = rpForm.querySelector('input[name="email"]') as HTMLInputElement;
+          if (!emailInput.value.trim()) return;
+          rpBtn.textContent = 'Joining…';
+          rpBtn.disabled = true;
+          try {
+            await fetch(rpForm.action, { method: 'POST', body: new FormData(rpForm), headers: { 'Accept': 'application/json' } });
+          } catch (_) {}
+          rpForm.reset();
+          rpBtn.style.display = 'none';
+          rpSuccess.hidden = false;
+        });
+      </script>
     </div>
 
   </div>
