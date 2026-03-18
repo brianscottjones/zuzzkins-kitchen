@@ -32,6 +32,11 @@
       "id": "5",
       "src": "/zucchini-bread.jpg",
       "alt": "Zucchini bread"
+    },
+    {
+      "id": "6",
+      "src": "/carrot_cake.jpg",
+      "alt": "Frosted carrot cake on a glass cake stand with violet flowers and orange zest"
     }
   ]
 }
