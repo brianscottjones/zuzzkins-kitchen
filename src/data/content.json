@@ -11,32 +11,38 @@
     {
       "id": "1",
       "src": "/flower-cake.jpg",
-      "alt": "Two-tier lemon cake with edible cosmos flowers, raspberries, and lemon slices"
+      "alt": "Two-tier lemon cake with edible cosmos flowers, raspberries, and lemon slices",
+      "name": "Lemon Cosmos Cake"
     },
     {
       "id": "2",
       "src": "/carrot_cake.jpg",
-      "alt": "Frosted carrot cake on a glass cake stand with violet flowers and orange zest"
+      "alt": "Frosted carrot cake on a glass cake stand with violet flowers and orange zest",
+      "name": "Carrot Cake"
     },
     {
       "id": "3",
       "src": "/cake.jpg",
-      "alt": "Victoria sponge cake with fresh berries and cream"
+      "alt": "Victoria sponge cake with fresh berries and cream",
+      "name": "Victoria Sponge"
     },
     {
       "id": "4",
       "src": "/brownies.jpg",
-      "alt": "Stack of homemade brownies on a vintage floral plate"
+      "alt": "Stack of homemade brownies on a vintage floral plate",
+      "name": "Brownies"
     },
     {
       "id": "5",
       "src": "/preserves.jpg",
-      "alt": "Chilli Jam, Pickles, Chutney, Salsa"
+      "alt": "Chilli Jam, Pickles, Chutney, Salsa",
+      "name": "Preserves & Condiments"
     },
     {
       "id": "6",
       "src": "/zucchini-bread.jpg",
-      "alt": "Zucchini bread"
+      "alt": "Zucchini bread",
+      "name": "Zucchini Bread"
     }
   ]
 }

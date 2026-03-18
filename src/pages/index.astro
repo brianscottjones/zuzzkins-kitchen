@@ -23,9 +23,14 @@ const { photos, stops, site } = content;
       <div class="slider-wrapper">
         <button class="slider__arrow slider__arrow--left" aria-label="Previous">&#8249;</button>
         <div class="slider__track" id="sliderTrack">
-          {photos.map((photo: { id: string; src: string; alt: string }) => (
-            <div class="slider__slide">
+          {photos.map((photo: { id: string; src: string; alt: string; name?: string }) => (
+            <div class="slider__slide" data-name={photo.name || ''}>
               <img src={photo.src} alt={photo.alt} loading="lazy" data-lightbox />
+              {photo.name && (
+                <div class="slider__label">
+                  <span class="slider__label-text">{photo.name}</span>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -57,6 +62,8 @@ const { photos, stops, site } = content;
         flex: 0 0 100%;
         aspect-ratio: 1;
         overflow: hidden;
+        position: relative;
+        cursor: pointer;
       }
       .slider__slide img {
         width: 100%;
@@ -64,6 +71,29 @@ const { photos, stops, site } = content;
         object-fit: cover;
         display: block;
         pointer-events: none;
+      }
+      .slider__label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 2rem 1rem 1.25rem;
+        background: linear-gradient(transparent, rgba(61, 43, 31, 0.7));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+      .slider__slide.show-label .slider__label {
+        opacity: 1;
+      }
+      .slider__label-text {
+        font-family: 'Playfair Display', Georgia, serif;
+        color: #FFF8F0;
+        font-size: clamp(1.1rem, 3vw, 1.4rem);
+        font-weight: 600;
+        font-style: italic;
+        letter-spacing: 0.02em;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.3);
       }
       .slider__arrow {
         position: absolute;
@@ -339,10 +369,24 @@ const { photos, stops, site } = content;
         lbImg.alt = images[currentIndex].alt;
       }
 
-      // Open lightbox on click/tap (but not on drag/swipe)
+      // Tap to toggle label; double-tap opens lightbox
+      let tapTimeout: ReturnType<typeof setTimeout> | null = null;
       document.querySelectorAll('.slider__slide').forEach((slide, i) => {
         slide.addEventListener('click', (e) => {
-          if (!moved) openLightbox(i);
+          if (moved) return;
+          if (tapTimeout) {
+            // Double tap — open lightbox
+            clearTimeout(tapTimeout);
+            tapTimeout = null;
+            slide.classList.remove('show-label');
+            openLightbox(i);
+          } else {
+            // Single tap — toggle label
+            tapTimeout = setTimeout(() => {
+              tapTimeout = null;
+              slide.classList.toggle('show-label');
+            }, 300);
+          }
         });
       });
       lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
