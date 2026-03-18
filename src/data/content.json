@@ -4,7 +4,7 @@
     "tagline": "Always Homemade",
     "contactEmail": "hello@zuzzkins.com",
     "contactIntro": "Just want to say hi? We'd love to hear from you.",
-    "newsletterText": "Join the Rat Pack! Sign up to get the latest on where we’ll be, what’s baking, and first dibs on seasonal goodies."
+    "newsletterText": "Join the Rat Pack! Sign up to get the latest on where we\u2019ll be, what\u2019s baking, and first dibs on seasonal goodies."
   },
   "stops": [],
   "photos": [
@@ -15,28 +15,28 @@
     },
     {
       "id": "2",
+      "src": "/carrot_cake.jpg",
+      "alt": "Frosted carrot cake on a glass cake stand with violet flowers and orange zest"
+    },
+    {
+      "id": "3",
       "src": "/cake.jpg",
       "alt": "Victoria sponge cake with fresh berries and cream"
     },
     {
-      "id": "3",
+      "id": "4",
       "src": "/brownies.jpg",
       "alt": "Stack of homemade brownies on a vintage floral plate"
     },
     {
-      "id": "4",
+      "id": "5",
       "src": "/preserves.jpg",
       "alt": "Chilli Jam, Pickles, Chutney, Salsa"
     },
     {
-      "id": "5",
+      "id": "6",
       "src": "/zucchini-bread.jpg",
       "alt": "Zucchini bread"
-    },
-    {
-      "id": "6",
-      "src": "/carrot_cake.jpg",
-      "alt": "Frosted carrot cake on a glass cake stand with violet flowers and orange zest"
     }
   ]
 }
