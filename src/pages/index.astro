@@ -35,11 +35,11 @@ const { photos, stops, site } = content;
           ))}
         </div>
         <button class="slider__arrow slider__arrow--right" aria-label="Next">&#8250;</button>
-        <div class="slider__dots" id="sliderDots">
-          {photos.map((_: any, i: number) => (
-            <button class={`slider__dot ${i === 0 ? 'active' : ''}`} data-index={i} aria-label={`Photo ${i + 1}`}></button>
-          ))}
-        </div>
+      </div>
+      <div class="slider__dots" id="sliderDots">
+        {photos.map((_: any, i: number) => (
+          <button class={`slider__dot ${i === 0 ? 'active' : ''}`} data-index={i} aria-label={`Photo ${i + 1}`}></button>
+        ))}
       </div>
     </section>
 
@@ -121,6 +121,8 @@ const { photos, stops, site } = content;
         justify-content: center;
         gap: 0.5rem;
         padding-top: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
       }
       .slider__dot {
         width: 8px;
