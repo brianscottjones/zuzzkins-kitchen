@@ -55,27 +55,57 @@ const { stops, newsletterText } = Astro.props;
         <input type="email" name="email" placeholder="Join the mailing list" required class="dates__input" />
         <button type="submit" class="btn btn-rose" id="ratPackBtn">Sign Up</button>
         <p class="ratpack-success" id="ratPackSuccess" hidden style="color: var(--color-sage-dark); font-family: var(--font-script); margin-top: 0.5rem;">Welcome to the Rat Pack! 🐀</p>
+        <p class="ratpack-error" id="ratPackError" hidden style="color: var(--color-rose-dark); font-size: 0.875rem; margin-top: 0.5rem;">Something went wrong — please try again.</p>
       </form>
       <script>
         const rpForm = document.getElementById('ratPackForm') as HTMLFormElement;
         const rpBtn = document.getElementById('ratPackBtn') as HTMLButtonElement;
         const rpSuccess = document.getElementById('ratPackSuccess')!;
+        const rpError = document.getElementById('ratPackError')!;
         rpForm?.addEventListener('submit', async (e) => {
           e.preventDefault();
           const emailInput = rpForm.querySelector('input[name="email"]') as HTMLInputElement;
           if (!emailInput.value.trim()) return;
           rpBtn.textContent = 'Joining…';
           rpBtn.disabled = true;
+          rpError.hidden = true;
           try {
-            await fetch('/api/signup', {
+            const res = await fetch('https://api.buttondown.com/v1/subscribers', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: emailInput.value.trim() })
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Token e489cb43-e507-467f-a9a8-efc367bfba06'
+              },
+              body: JSON.stringify({ email_address: emailInput.value.trim() })
             });
-          } catch (_) {}
-          rpForm.reset();
-          rpBtn.style.display = 'none';
-          rpSuccess.hidden = false;
+            if (res.status === 201) {
+              // Success
+              rpForm.reset();
+              rpBtn.style.display = 'none';
+              rpSuccess.hidden = false;
+            } else if (res.status === 400) {
+              const data = await res.json().catch(() => ({}));
+              if (data.code === 'email_already_exists' || data.code === 'subscriber_already_exists') {
+                // Already subscribed — treat as success
+                rpForm.reset();
+                rpBtn.style.display = 'none';
+                rpSuccess.hidden = false;
+              } else {
+                // Other error (blocked, invalid, etc.)
+                rpBtn.textContent = 'Sign Up';
+                rpBtn.disabled = false;
+                rpError.hidden = false;
+              }
+            } else {
+              rpBtn.textContent = 'Sign Up';
+              rpBtn.disabled = false;
+              rpError.hidden = false;
+            }
+          } catch (_) {
+            rpBtn.textContent = 'Sign Up';
+            rpBtn.disabled = false;
+            rpError.hidden = false;
+          }
         });
       </script>
     </div>
