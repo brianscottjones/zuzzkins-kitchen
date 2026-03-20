@@ -78,28 +78,23 @@ const { stops, newsletterText } = Astro.props;
               },
               body: JSON.stringify({ email_address: emailInput.value.trim() })
             });
-            if (res.status === 201) {
-              // Success
+            if (res.ok) {
+              // 2xx — subscriber created
               rpForm.reset();
               rpBtn.style.display = 'none';
               rpSuccess.hidden = false;
-            } else if (res.status === 400) {
+            } else {
               const data = await res.json().catch(() => ({}));
-              if (data.code === 'email_already_exists' || data.code === 'subscriber_already_exists') {
-                // Already subscribed — treat as success
+              if (data.code === 'email_already_exists' || data.code === 'subscriber_already_exists' || data.code === 'subscriber_blocked') {
+                // Already subscribed or flagged but created — treat as success
                 rpForm.reset();
                 rpBtn.style.display = 'none';
                 rpSuccess.hidden = false;
               } else {
-                // Other error (blocked, invalid, etc.)
                 rpBtn.textContent = 'Sign Up';
                 rpBtn.disabled = false;
                 rpError.hidden = false;
               }
-            } else {
-              rpBtn.textContent = 'Sign Up';
-              rpBtn.disabled = false;
-              rpError.hidden = false;
             }
           } catch (_) {
             rpBtn.textContent = 'Sign Up';
