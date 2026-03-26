@@ -4,7 +4,7 @@
 #
 # Commands:
 #   stops list
-#   stops add "<date YYYY-MM-DD>" "<venue>" "<location>" "<time>" ["<description>"]
+#   stops add "<date YYYY-MM-DD>" "<venue>" "<location>" "<time>" ["<description>"] ["<link URL>"]
 #   stops remove "<date YYYY-MM-DD>"
 #   stops clear
 #   photos list
@@ -98,6 +98,7 @@ cmd_stops_add() {
   local location="${3:?location required}"
   local time="${4:?time required}"
   local description="${5:-}"
+  local link="${6:-}"
 
   # Generate formatted date and day-of-week
   local formatted_date day
@@ -106,9 +107,9 @@ cmd_stops_add() {
 
   require_file
   local new_json
-  new_json=$($PYTHON - "$CONTENT_JSON" "$raw_date" "$formatted_date" "$day" "$venue" "$location" "$time" "$description" <<'PYEOF'
+  new_json=$($PYTHON - "$CONTENT_JSON" "$raw_date" "$formatted_date" "$day" "$venue" "$location" "$time" "$description" "$link" <<'PYEOF'
 import json, sys, uuid
-path, raw_date, fmt_date, day, venue, loc, time_str, desc = sys.argv[1:]
+path, raw_date, fmt_date, day, venue, loc, time_str, desc, link = sys.argv[1:]
 data = json.load(open(path))
 stops = data.get('stops', [])
 # Prevent duplicate by date
@@ -123,6 +124,8 @@ new_stop = {
 }
 if desc:
     new_stop["description"] = desc
+if link:
+    new_stop["link"] = link
 stops.append(new_stop)
 # Sort by id (YYYY-MM-DD)
 stops.sort(key=lambda s: s.get('id', ''))
@@ -422,7 +425,7 @@ USAGE:
 
 STOPS:
   stops list
-  stops add "2026-03-22" "Kingston Springs Market" "Kingston Springs, TN" "8:00 AM - 12:00 PM"
+  stops add "2026-03-22" "Kingston Springs Market" "Kingston Springs, TN" "8:00 AM - 12:00 PM" "" "https://example.com"
   stops remove "2026-03-22"        # by date (YYYY-MM-DD)
   stops remove "Kingston Springs Market"   # by venue name
   stops clear                      # remove all stops

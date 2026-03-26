@@ -6,6 +6,7 @@ interface Stop {
   venue: string;
   location: string;
   time: string;
+  link?: string;
 }
 
 interface Props {
@@ -35,7 +36,10 @@ const { stops, newsletterText } = Astro.props;
               <span class="dates__day-name">{d.day}</span>
             </div>
             <div class="dates__venue-block">
-              <span class="dates__venue">{d.venue}</span>
+              {d.link
+                ? <a class="dates__venue dates__venue-link" href={d.link} target="_blank" rel="noopener">{d.venue}</a>
+                : <span class="dates__venue">{d.venue}</span>
+              }
               <span class="dates__location">{d.location}</span>
             </div>
             <div class="dates__time-block">
@@ -178,6 +182,16 @@ const { stops, newsletterText } = Astro.props;
     font-size: 1rem;
     font-weight: 600;
     color: var(--color-brown);
+  }
+
+  .dates__venue-link {
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .dates__venue-link:hover {
+    border-bottom-color: var(--color-brown);
   }
 
   .dates__location {
