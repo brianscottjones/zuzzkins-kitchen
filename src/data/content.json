@@ -6,7 +6,64 @@
     "contactIntro": "Questions, comments, pre-orders? Fill out the form below.",
     "newsletterText": "Join the Rat Pack! Sign up to get the latest on where we’ll be, what’s baking, and first dibs on seasonal goodies."
   },
-  "stops": [],
+  "stops": [
+    {
+      "id": "2026-08-08",
+      "date": "Aug 8",
+      "day": "Saturday",
+      "venue": "Kingston Springs Farmers & Artisan Market",
+      "location": "Kingston Springs, TN",
+      "time": "9:00 AM – 12:00 PM"
+    },
+    {
+      "id": "2026-09-05",
+      "date": "Sep 5",
+      "day": "Saturday",
+      "venue": "Growing Together Farmers Market",
+      "location": "South Nashville, TN",
+      "time": "9:00 AM – 12:00 PM"
+    },
+    {
+      "id": "2026-09-19",
+      "date": "Sep 19",
+      "day": "Saturday",
+      "venue": "Growing Together Farmers Market",
+      "location": "South Nashville, TN",
+      "time": "9:00 AM – 12:00 PM"
+    },
+    {
+      "id": "2026-10-03",
+      "date": "Oct 3",
+      "day": "Saturday",
+      "venue": "Growing Together Farmers Market",
+      "location": "South Nashville, TN",
+      "time": "9:00 AM – 12:00 PM"
+    },
+    {
+      "id": "2026-10-17",
+      "date": "Oct 17",
+      "day": "Saturday",
+      "venue": "Growing Together Farmers Market",
+      "location": "South Nashville, TN",
+      "time": "9:00 AM – 12:00 PM"
+    },
+    {
+      "id": "2026-10-31",
+      "date": "Oct 31",
+      "day": "Saturday",
+      "venue": "Growing Together Farmers Market",
+      "location": "South Nashville, TN",
+      "time": "9:00 AM – 12:00 PM"
+    },
+    {
+      "id": "2026-11-14",
+      "date": "Nov 14",
+      "day": "Saturday",
+      "venue": "Growing Together Farmers Market",
+      "location": "South Nashville, TN",
+      "time": "9:00 AM – 12:00 PM"
+    }
+  ],
   "photos": [
     {
       "id": "1",

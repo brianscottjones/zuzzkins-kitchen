@@ -212,6 +212,64 @@ PYEOF
   write_json "$new_json"
 }
 
+cmd_photos_add() {
+  local filename="${1:?filename required (e.g. cake.jpg)}"
+  local alt="${2:?alt text required}"
+  local src_path="${3:-}"
+
+  require_file
+
+  # Strip leading slash from filename if present
+  local basename
+  basename=$(basename "$filename")
+
+  # Copy file to public/ if a source path was provided and it's not already there
+  local public_dir
+  public_dir="$(dirname "$0")/public"
+  local dest="$public_dir/$basename"
+
+  if [[ -n "$src_path" ]]; then
+    if [[ ! -f "$src_path" ]]; then
+      die "Source file not found: $src_path"
+    fi
+    cp "$src_path" "$dest"
+    echo "✓ Copied $basename to public/"
+  fi
+
+  # Add to content.json photos array
+  local new_json
+  new_json=$($PYTHON - "$CONTENT_JSON" "$basename" "$alt" <<'PYEOF'
+import json, sys, os
+path, filename, alt = sys.argv[1:]
+data = json.load(open(path))
+photos = data.get('photos', [])
+# Get next available id (max existing id + 1)
+existing_ids = []
+for p in photos:
+    try:
+        existing_ids.append(int(p.get('id', '0')))
+    except (ValueError, TypeError):
+        pass
+next_id = str(max(existing_ids) + 1) if existing_ids else "1"
+# Check for duplicate src
+src = "/" + filename
+for p in photos:
+    if p.get('src') == src:
+        print(f"WARNING: photo with src '{src}' already exists", file=sys.stderr)
+new_photo = {
+    "id": next_id,
+    "src": src,
+    "alt": alt
+}
+photos.append(new_photo)
+data['photos'] = photos
+print(json.dumps(data, indent=2, ensure_ascii=False))
+PYEOF
+)
+  write_json "$new_json"
+  echo "✓ Added photo: /$basename — \"$alt\""
+}
+
 cmd_photos_reorder() {
   # Takes comma-separated filenames in desired order
   local order="${1:?comma-separated filenames required}"
@@ -331,6 +389,7 @@ case "$COMMAND" in
     SUBCOMMAND="${1:-list}"; shift || true
     case "$SUBCOMMAND" in
       list)    cmd_photos_list ;;
+      add)     cmd_photos_add "$@" ;;
       remove)  cmd_photos_remove "$@" ;;
       reorder) cmd_photos_reorder "$@" ;;
       *)       die "Unknown photos subcommand: $SUBCOMMAND" ;;
@@ -370,7 +429,9 @@ STOPS:
 
 PHOTOS:
   photos list
-  photos remove "flower-cake.jpg"  # removes from gallery (file stays on disk)
+  photos add "cake.jpg" "Alt text description"      # add to gallery (file must be in public/)
+  photos add "cake.jpg" "Alt text" "/tmp/cake.jpg"  # copy file + add to gallery
+  photos remove "flower-cake.jpg"                   # removes from gallery (file stays on disk)
   photos reorder "cake.jpg,brownies.jpg,flower-cake.jpg"
 
 INFO:
