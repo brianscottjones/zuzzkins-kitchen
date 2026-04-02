@@ -6,7 +6,13 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node --test tests/pre-build.test.mjs",
+    "test:post": "node --test tests/post-build.test.mjs",
+    "test:build": "npm run build && node --test tests/post-build.test.mjs",
+    "test:all": "node --test tests/pre-build.test.mjs && npm run build && node --test tests/post-build.test.mjs",
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:dry": "bash scripts/deploy.sh --dry-run"
   },
   "dependencies": {
     "astro": "^5.17.1"
