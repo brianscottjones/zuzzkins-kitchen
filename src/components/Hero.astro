@@ -10,10 +10,9 @@ const { tagline, location } = Astro.props;
   <div class="hero__inner container">
 
     <!-- Logo placeholder — temporary until final branding is ready -->
-    <div class="hero__logo-wrap" aria-label="Zuzzkin's Kitchen logo coming soon">
-      <div class="hero__logo-placeholder" role="img" aria-label="Logo coming soon">
-        <span class="hero__logo-script">Logo</span>
-        <span class="hero__logo-heading">Coming Soon</span>
+    <div class="hero__logo-wrap" aria-label="Zuzzkin's Kitchen placeholder logo">
+      <div class="hero__logo-placeholder" role="img" aria-label="Placeholder logo">
+        <span class="hero__logo-heading">placeholder</span>
       </div>
     </div>
 
@@ -74,20 +73,13 @@ const { tagline, location } = Astro.props;
     padding: 2rem;
   }
 
-  .hero__logo-script {
-    font-family: var(--font-script);
-    font-size: clamp(2.8rem, 8vw, 4.8rem);
-    line-height: 0.9;
-    color: var(--color-rose-dark);
-  }
-
   .hero__logo-heading {
     font-family: var(--font-heading);
-    font-size: clamp(1.1rem, 3vw, 1.7rem);
+    font-size: clamp(1rem, 3vw, 1.55rem);
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     line-height: 1.15;
-    text-transform: uppercase;
+    text-transform: lowercase;
     color: var(--color-brown);
   }
 
