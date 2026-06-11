@@ -5,23 +5,34 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Dancing+Script:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
 
+@font-face {
+  font-family: 'Yamas';
+  src: url('/fonts/yamas/TAYYamasRegular.woff2') format('woff2'),
+       url('/fonts/yamas/TAYYamasRegular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── Custom Properties ── */
 :root {
-  --color-cream:      #FFF8F0;
+  --color-cream:      #FCF5E9;
   --color-white:      #FFFFFF;
-  --color-bone:       #F5EDE0;
-  --color-rose:       #D4A0A0;
-  --color-rose-dark:  #B8736D;
-  --color-rose-light: #EDD8D8;
-  --color-sage:       #9CAF88;
-  --color-sage-dark:  #7A9066;
+  --color-bone:       #E9DEC2;
+  --color-rose:       #F3CEC0;
+  --color-rose-dark:  #D99993;
+  --color-rose-light: #F3CEC0;
+  --color-sage:       #7A8C7A;
+  --color-sage-dark:  #7A8C7A;
   --color-brown:      #3D2B1F;
   --color-text:       #3D2B1F;
-  --color-text-muted: #9A7A6A;
-  --color-border:     #EDE0D4;
+  --color-text-muted: #7A8C7A;
+  --color-border:     #E9DEC2;
+  --color-gold:       #F2CA8B;
+  --color-blue:       #B8CAD3;
 
   --font-heading: 'Playfair Display', Georgia, serif;
-  --font-script:  'Dancing Script', cursive;
+  --font-script:  'Yamas', 'Dancing Script', cursive;
   --font-body:    'Lato', 'Helvetica Neue', sans-serif;
 
   --section-pad: clamp(5rem, 10vw, 9rem);

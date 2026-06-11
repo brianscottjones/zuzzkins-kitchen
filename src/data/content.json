@@ -4,7 +4,7 @@
     "tagline": "Always Homemade",
     "contactEmail": "hello@zuzzkins.com",
     "contactIntro": "Questions, comments, pre-orders? Fill out the form below.",
-    "newsletterText": "Join the Rat Pack! Sign up to get the latest on where we’ll be, what’s baking, and first dibs on seasonal goodies."
+    "newsletterText": "Sign up for news and updates."
   },
   "stops": [
     {
@@ -74,27 +74,27 @@
   "photos": [
     {
       "id": "1",
-      "src": "/flower-cake.jpg",
-      "alt": "Two-tier lemon cake with edible cosmos flowers, raspberries, and lemon slices",
-      "name": "Lemon Cosmos Cake"
+      "src": "/preserves.jpg",
+      "alt": "Chilli Jam, Pickles, Chutney, Salsa",
+      "name": "Preserves & Condiments"
     },
     {
       "id": "2",
-      "src": "/cake.jpg",
-      "alt": "Victoria sponge cake with fresh berries and cream",
-      "name": "Victoria Sponge"
-    },
-    {
-      "id": "3",
       "src": "/brownies.jpg",
       "alt": "Stack of homemade brownies on a vintage floral plate",
       "name": "Brownies"
     },
     {
+      "id": "3",
+      "src": "/flower-cake.jpg",
+      "alt": "Two-tier lemon cake with edible cosmos flowers, raspberries, and lemon slices",
+      "name": "Lemon Cosmos Cake"
+    },
+    {
       "id": "4",
-      "src": "/preserves.jpg",
-      "alt": "Chilli Jam, Pickles, Chutney, Salsa",
-      "name": "Preserves & Condiments"
+      "src": "/cake.jpg",
+      "alt": "Victoria sponge cake with fresh berries and cream",
+      "name": "Victoria Sponge"
     },
     {
       "id": "5",
