@@ -15,6 +15,7 @@ interface Props {
 }
 
 const { stops, newsletterText } = Astro.props;
+const trimmedNewsletterText = newsletterText?.trim();
 ---
 
 <section class="dates" id="shop">
@@ -54,11 +55,11 @@ const { stops, newsletterText } = Astro.props;
 
     <div class="dates__signup">
       <h3 class="dates__signup-heading">Sign up for news and updates</h3>
-      <p class="dates__signup-text">{newsletterText}</p>
+      {trimmedNewsletterText && <p class="dates__signup-text">{trimmedNewsletterText}</p>}
       <form class="dates__form" id="ratPackForm">
         <input type="email" name="email" placeholder="Email address" required class="dates__input" />
         <button type="submit" class="btn btn-rose" id="ratPackBtn">Sign Up</button>
-        <p class="ratpack-success" id="ratPackSuccess" hidden style="color: var(--color-sage-dark); font-family: var(--font-script); margin-top: 0.5rem;">You're signed up for news and updates! ✦</p>
+        <p class="ratpack-success" id="ratPackSuccess" hidden style="color: var(--color-sage-dark); font-family: var(--font-script); margin-top: 0.5rem;">Thanks — you're signed up for news and updates! ✦</p>
         <p class="ratpack-error" id="ratPackError" hidden style="color: var(--color-rose-dark); font-size: 0.875rem; margin-top: 0.5rem;">Something went wrong — please try again.</p>
       </form>
       <script>
@@ -70,7 +71,7 @@ const { stops, newsletterText } = Astro.props;
           e.preventDefault();
           const emailInput = rpForm.querySelector('input[name="email"]') as HTMLInputElement;
           if (!emailInput.value.trim()) return;
-          rpBtn.textContent = 'Joining…';
+          rpBtn.textContent = 'Signing up…';
           rpBtn.disabled = true;
           rpError.hidden = true;
           try {

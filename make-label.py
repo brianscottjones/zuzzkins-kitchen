@@ -1,212 +1,159 @@
 #!/usr/bin/env python3
 """
-Zuzzkin's Kitchen — Label Generator (v8 template)
-Usage: python3 make-label.py "Product Name" "Ingredient 1, Ingredient 2" [output.pdf]
+Zuzzkin's Kitchen — Avery 5360 ingredient label generator.
 
-Produces a 2.8125" x 1.5" horizontal label sheet (21 labels, 3x7) in v8 format:
-  - Circular logo (left)
-  - Product name (bold brown)
-  - Pink rule (equal spacing above/below)
-  - Ingredients
-  - Light rule
-  - Made by Zuzzkin's Kitchen
-  - Address & phone (tiny, 2 lines)
-  - Light rule
-  - Legal disclaimer
-  - "Strawberries/[produce] from: ___" line (pinned to bottom)
+Usage:
+  python3 make-label.py "Product Name" "Ingredient 1, Ingredient 2" [output.pdf] ["Dominant ingredient from"]
+
+Produces one Letter page with 21 labels, 3 columns × 7 rows, sized for Avery 5360
+(1-1/2" × 2-13/16").
 """
 
-import sys
+from __future__ import annotations
+
 import os
+import re
+import sys
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.lib import colors
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
-from reportlab.lib.utils import ImageReader
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-LOGO = os.path.join(SCRIPT_DIR, "public", "logo.jpg")
 LABELS_DIR = os.path.join(SCRIPT_DIR, "labels")
+YAMAS_OTF = os.path.join(SCRIPT_DIR, "public", "fonts", "yamas", "TAYYamasRegular.otf")
+YAMAS_FONT = "Yamas"
 
-def make_label_pdf(product_name, ingredients, output_path, produce_line=None):
-    """
-    product_name:  e.g. "Strawberry Preserves"
-    ingredients:   e.g. "Strawberries, Sugar"
-    output_path:   e.g. "/path/to/strawberry-preserves.pdf"
-    produce_line:  e.g. "Strawberries from:" (auto-generated if None)
-    """
-    if produce_line is None:
-        first_ingredient = ingredients.split(",")[0].strip()
-        produce_line = f"{first_ingredient} from:"
+# Avery 5360: 3 × 7, 2-13/16" × 1-1/2". These coordinates match the
+# Avery template: 0.1875" left margin, 0.5" top/bottom margins, 0.0625" gutters.
+PAGE_W, PAGE_H = letter
+LABEL_W = 2.8125 * inch
+LABEL_H = 1.5 * inch
+LEFT_MARGIN = 0.1875 * inch
+TOP_MARGIN = 0.5 * inch
+H_GAP = 0.0625 * inch
+COL_X = [LEFT_MARGIN + i * (LABEL_W + H_GAP) for i in range(3)]
+ROW_Y = [PAGE_H - TOP_MARGIN - LABEL_H - i * LABEL_H for i in range(7)]
 
-    PAGE_W, PAGE_H = letter
-    LABEL_W = 2.8125 * inch
-    LABEL_H = 1.5 * inch
-    COLS = 3
-    ROWS = 7
+BROWN = colors.HexColor("#3D2B1F")
+BLACK = colors.HexColor("#222222")
+MUTED = colors.HexColor("#4F4A42")
+RULE = colors.HexColor("#777777")
 
-    # Avery 5360 exact margins
-    LEFT_MARGIN = 0.25 * inch
-    TOP_MARGIN  = 0.5  * inch
-    H_PITCH     = 2.875 * inch  # label + 0.0625" gap
-    TOP_MARGIN  = (PAGE_H - ROWS * LABEL_H) / 2
+PHONE = "(615) 378-7574"
+ADDRESS = "Hwy 70, Kingston Springs TN 37082"
+DISCLAIMER = (
+    "This product was produced at a private residence that is exempt from state "
+    "licensing and inspection. This product may contain allergens."
+)
+WEBSITE = "zuzzkins.com"
 
-    BROWN = colors.HexColor("#5C3D2E")
-    ROSE  = colors.HexColor("#C0666F")
-    MUTED = colors.HexColor("#8A7060")
-    BLACK = colors.HexColor("#222222")
-    LGRAY = colors.HexColor("#CCCCCC")
-    DGRAY = colors.HexColor("#AAAAAA")
 
-    c = canvas.Canvas(output_path, pagesize=letter)
-
-    def draw_circular_logo(c, cx, cy, r):
-        c.saveState()
-        p = c.beginPath()
-        p.circle(cx, cy, r)
-        c.clipPath(p, stroke=0, fill=0)
+def register_fonts() -> None:
+    if os.path.exists(YAMAS_OTF):
         try:
-            img = ImageReader(LOGO)
-            c.drawImage(img, cx - r, cy - r, width=2*r, height=2*r,
-                        preserveAspectRatio=False, mask='auto')
-        except:
-            c.setFillColor(BROWN)
-            c.circle(cx, cy, r, fill=1, stroke=0)
-        c.restoreState()
-
-    def wrap_text(c, font, size, text, max_w):
-        words = text.split()
-        lines = []
-        line = ""
-        for word in words:
-            test = (line + " " + word).strip()
-            if c.stringWidth(test, font, size) <= max_w:
-                line = test
-            else:
-                if line:
-                    lines.append(line)
-                line = word
-        if line:
-            lines.append(line)
-        return lines
-
-    def draw_label(c, x, y):
-        OUTER_PAD = 0.11 * inch
-        INNER_SEP = 0.08 * inch
-        RULE_GAP  = 0.07 * inch
-
-        LOGO_R = (LABEL_H * 0.55) / 2
-        logo_cx = x + OUTER_PAD + LOGO_R
-        logo_cy = y + LABEL_H / 2
-        # Label border
-        c.setStrokeColor(LGRAY)
-        c.setLineWidth(0.3)
-        c.rect(x, y, LABEL_W, LABEL_H)
-        draw_circular_logo(c, logo_cx, logo_cy, LOGO_R)
-
-        TX  = logo_cx + LOGO_R + INNER_SEP
-        TR  = x + LABEL_W - OUTER_PAD
-        TW  = TR - TX
-        TCX = TX + TW / 2
+            pdfmetrics.registerFont(TTFont(YAMAS_FONT, YAMAS_OTF))
+            return
+        except Exception:
+            pass
+    # Fallback keeps generation working if the licensed font is absent.
+    globals()["YAMAS_FONT"] = "Helvetica-Oblique"
 
 
-        cursor = y + LABEL_H - OUTER_PAD
+def slugify(value: str) -> str:
+    value = value.lower().replace("'", "")
+    value = re.sub(r"[^a-z0-9]+", "-", value).strip("-")
+    return value or "label"
 
-        # Product name
-        FS_PROD = 9
-        c.setFont("Helvetica-Bold", FS_PROD)
-        c.setFillColor(BROWN)
-        cursor -= FS_PROD * 0.95
-        c.drawCentredString(TCX, cursor, product_name)
-        cursor -= RULE_GAP
 
-        # Pink rule
-        c.setStrokeColor(ROSE)
-        c.setLineWidth(0.8)
-        c.line(TX, cursor, TR, cursor)
-        cursor -= RULE_GAP
+def wrap_text(c: canvas.Canvas, text: str, font: str, size: float, max_width: float) -> list[str]:
+    words = text.split()
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        test = f"{current} {word}".strip()
+        if c.stringWidth(test, font, size) <= max_width:
+            current = test
+        else:
+            if current:
+                lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    return lines
 
-        # Ingredients
-        FS_ING = 6
-        c.setFont("Helvetica-Bold", FS_ING)
-        c.setFillColor(BLACK)
-        cursor -= FS_ING * 0.9
-        c.drawCentredString(TCX, cursor, f"INGREDIENTS: {ingredients}")
-        cursor -= 0.07 * inch
 
-        # Light divider
-        c.setStrokeColor(LGRAY)
-        c.setLineWidth(0.4)
-        c.line(TX, cursor, TR, cursor)
-        cursor -= 0.07 * inch
+def draw_label(c: canvas.Canvas, x: float, y: float, product_name: str, ingredients: str, produce_label: str) -> None:
+    pad_x = 9
+    left = x + pad_x
+    right = x + LABEL_W - pad_x
+    width = right - left
 
-        # Made by
-        FS_MADE = 6
-        c.setFont("Helvetica-Bold", FS_MADE)
-        c.setFillColor(BLACK)
-        cursor -= FS_MADE * 0.9
-        c.drawCentredString(TCX, cursor, "Made by Zuzzkin's Kitchen")
-        cursor -= 0.065 * inch
+    # Product name
+    c.setFillColor(BLACK)
+    c.setFont("Helvetica-Bold", 7.6)
+    c.drawString(left, y + 95, product_name)
 
-        # Address + phone
-        FS_ADDR = 4.8
-        c.setFont("Helvetica", FS_ADDR)
-        c.setFillColor(MUTED)
-        cursor -= FS_ADDR * 0.9
-        c.drawCentredString(TCX, cursor, "1335 Highway 70, Kingston Springs, TN")
-        cursor -= FS_ADDR * 0.9 + 1
-        c.drawCentredString(TCX, cursor, "615.111.1111")
-        cursor -= 0.07 * inch
+    # Ingredients. Two lines max leaves room for the legal/disclaimer block below.
+    c.setFont("Helvetica", 6.0)
+    for i, line in enumerate(wrap_text(c, f"Ingredients: {ingredients}", "Helvetica", 6.0, width)[:2]):
+        c.drawString(left, y + 85 - i * 7, line)
 
-        # Light divider
-        c.setStrokeColor(LGRAY)
-        c.setLineWidth(0.4)
-        c.line(TX, cursor, TR, cursor)
-        cursor -= 0.06 * inch
+    # Homemade line, using Yamas only for the brand word.
+    made_y = y + 62
+    c.setFont("Helvetica", 6.2)
+    c.drawString(left, made_y, "Homemade with love at ")
+    prefix_w = c.stringWidth("Homemade with love at ", "Helvetica", 6.2)
+    c.setFont(YAMAS_FONT, 8.0)
+    c.drawString(left + prefix_w, made_y - 0.8, "Zuzzkin's")
 
-        # Disclaimer
-        DISC = ("This product was produced at a private residence exempt from state "
-                "licensing and inspection. This product may contain allergens.")
-        FS_DISC = 4.3
-        c.setFont("Helvetica", FS_DISC)
-        c.setFillColor(MUTED)
-        for dl in wrap_text(c, "Helvetica", FS_DISC, DISC, TW):
-            cursor -= FS_DISC * 0.9
-            c.drawCentredString(TCX, cursor, dl)
+    # Contact + legal, intentionally smaller/italic.
+    c.setFillColor(MUTED)
+    c.setFont("Helvetica-Oblique", 3.7)
+    contact = f"{PHONE} · {ADDRESS} · {DISCLAIMER}"
+    for i, line in enumerate(wrap_text(c, contact, "Helvetica-Oblique", 3.7, width)[:3]):
+        c.drawString(left, y + 47 - i * 4.4, line)
 
-        # "Produce from" — pinned near bottom
-        FROM_Y = y + OUTER_PAD + 0.01 * inch
-        FS_FROM = 6.5
-        c.setFont("Helvetica-Bold", FS_FROM)
-        c.setFillColor(BROWN)
-        tw = c.stringWidth(produce_line, "Helvetica-Bold", FS_FROM)
-        c.drawString(TX, FROM_Y, produce_line)
-        c.setStrokeColor(DGRAY)
-        c.setLineWidth(0.5)
-        c.line(TX + tw + 3, FROM_Y - 1, TR, FROM_Y - 1)
+    # Dominant ingredient line for handwriting.
+    from_y = y + 30
+    c.setFillColor(BLACK)
+    c.setFont("Helvetica", 6.0)
+    label_text = f"{produce_label} from"
+    c.drawString(left, from_y, label_text)
+    line_start = left + c.stringWidth(label_text, "Helvetica", 6.0) + 4
+    c.setStrokeColor(RULE)
+    c.setLineWidth(0.45)
+    c.line(line_start, from_y - 1, right, from_y - 1)
 
-    for row in range(ROWS):
-        for col in range(COLS):
-            lx = LEFT_MARGIN + col * H_PITCH
-            ly = PAGE_H - TOP_MARGIN - (row + 1) * LABEL_H
-            draw_label(c, lx, ly)
+    # Website, using Yamas as requested.
+    c.setFillColor(BROWN)
+    c.setFont(YAMAS_FONT, 7.8)
+    c.drawString(left, y + 10, WEBSITE)
 
+
+def make_label_pdf(product_name: str, ingredients: str, output_path: str, produce_label: str | None = None) -> None:
+    register_fonts()
+    if produce_label is None:
+        produce_label = ingredients.split(",")[0].strip()
+
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    c = canvas.Canvas(output_path, pagesize=letter)
+    for y in ROW_Y:
+        for x in COL_X:
+            draw_label(c, x, y, product_name, ingredients, produce_label)
     c.save()
-    print(f"✅ Saved: {output_path}")
+    print(f"Saved: {output_path}")
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python3 make-label.py \"Product Name\" \"Ingredient 1, Ingredient 2\" [output.pdf]")
+        print((__doc__ or "").strip())
         sys.exit(1)
 
-    product   = sys.argv[1]
-    ingreds   = sys.argv[2]
-    if len(sys.argv) >= 4:
-        out_path = sys.argv[3]
-    else:
-        slug = product.lower().replace(" ", "-").replace("'", "")
-        out_path = os.path.join(LABELS_DIR, f"{slug}.pdf")
-
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    make_label_pdf(product, ingreds, out_path)
+    product = sys.argv[1]
+    ingredients = sys.argv[2]
+    output = sys.argv[3] if len(sys.argv) >= 4 else os.path.join(LABELS_DIR, f"{slugify(product)}.pdf")
+    produce = sys.argv[4] if len(sys.argv) >= 5 else None
+    make_label_pdf(product, ingredients, output, produce)

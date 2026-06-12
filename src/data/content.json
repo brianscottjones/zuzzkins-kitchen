@@ -1,10 +1,10 @@
 {
   "site": {
     "location": "Kingston Springs, TN",
-    "tagline": "Always Homemade",
+    "tagline": "always homemade",
     "contactEmail": "hello@zuzzkins.com",
     "contactIntro": "Questions, comments, pre-orders? Fill out the form below.",
-    "newsletterText": "Sign up for news and updates."
+    "newsletterText": ""
   },
   "stops": [
     {
