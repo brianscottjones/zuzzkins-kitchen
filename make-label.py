@@ -6,28 +6,35 @@ Usage:
   python3 make-label.py "Product Name" "Ingredient 1, Ingredient 2" [output.pdf] ["Dominant ingredient from"]
 
 Produces one Letter page with 21 labels, 3 columns × 7 rows, sized for Avery 5360
-(1-1/2" × 2-13/16").
+(2-13/16" × 1-1/2"). The licensed YAMAS OTF is rendered into the PDF as image
+art for brand text because ReportLab cannot embed this CFF-flavored OTF directly.
 """
 
 from __future__ import annotations
 
+from io import BytesIO
 import os
 import re
 import sys
+
+from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
-from reportlab.lib import colors
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
+
+try:
+    from PIL import Image, ImageDraw, ImageFont
+except Exception:  # pragma: no cover - label generation still has a fallback
+    Image = ImageDraw = ImageFont = None
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 LABELS_DIR = os.path.join(SCRIPT_DIR, "labels")
 YAMAS_OTF = os.path.join(SCRIPT_DIR, "public", "fonts", "yamas", "TAYYamasRegular.otf")
-YAMAS_FONT = "Yamas"
 
-# Avery 5360: 3 × 7, 2-13/16" × 1-1/2". These coordinates match the
-# Avery template: 0.1875" left margin, 0.5" top/bottom margins, 0.0625" gutters.
+# Avery 5360: 3 × 7, 2-13/16" × 1-1/2".
+# Template: 0.1875" left/right margins, 0.5" top/bottom margins,
+# 0.0625" horizontal gutters, no vertical gutters.
 PAGE_W, PAGE_H = letter
 LABEL_W = 2.8125 * inch
 LABEL_H = 1.5 * inch
@@ -48,24 +55,83 @@ DISCLAIMER = (
     "This product was produced at a private residence that is exempt from state "
     "licensing and inspection. This product may contain allergens."
 )
-WEBSITE = "zuzzkins.com"
+WEBSITE = "ZUZZKINS.COM"
+BRAND = "ZUZZKINS"
 
-
-def register_fonts() -> None:
-    if os.path.exists(YAMAS_OTF):
-        try:
-            pdfmetrics.registerFont(TTFont(YAMAS_FONT, YAMAS_OTF))
-            return
-        except Exception:
-            pass
-    # Fallback keeps generation working if the licensed font is absent.
-    globals()["YAMAS_FONT"] = "Helvetica-Oblique"
+_yamas_cache: dict[tuple[str, int, str], ImageReader] = {}
 
 
 def slugify(value: str) -> str:
     value = value.lower().replace("'", "")
     value = re.sub(r"[^a-z0-9]+", "-", value).strip("-")
     return value or "label"
+
+
+def color_to_hex(color: colors.Color) -> str:
+    return "#{:02x}{:02x}{:02x}".format(
+        int(color.red * 255),
+        int(color.green * 255),
+        int(color.blue * 255),
+    )
+
+
+def yamas_image(text: str, font_size: int, fill: colors.Color) -> ImageReader | None:
+    """Render YAMAS text to transparent artwork for reliable PDF output."""
+    if Image is None or ImageDraw is None or ImageFont is None or not os.path.exists(YAMAS_OTF):
+        return None
+
+    key = (text, font_size, color_to_hex(fill))
+    if key in _yamas_cache:
+        return _yamas_cache[key]
+
+    font = ImageFont.truetype(YAMAS_OTF, font_size)
+    scratch = Image.new("RGBA", (1, 1), (255, 255, 255, 0))
+    draw = ImageDraw.Draw(scratch)
+    bbox = draw.textbbox((0, 0), text, font=font)
+    width = max(1, bbox[2] - bbox[0])
+    height = max(1, bbox[3] - bbox[1])
+    pad = max(8, font_size // 3)
+    image = Image.new("RGBA", (width + pad * 2, height + pad * 2), (255, 255, 255, 0))
+    draw = ImageDraw.Draw(image)
+    draw.text((pad - bbox[0], pad - bbox[1]), text, font=font, fill=color_to_hex(fill))
+
+    buf = BytesIO()
+    image.save(buf, format="PNG")
+    buf.seek(0)
+    reader = ImageReader(buf)
+    _yamas_cache[key] = reader
+    return reader
+
+
+def draw_yamas(
+    c: canvas.Canvas,
+    text: str,
+    x: float,
+    y: float,
+    max_width: float,
+    max_height: float,
+    *,
+    font_size: int = 42,
+    fill: colors.Color = BROWN,
+    align: str = "center",
+) -> float:
+    """Draw YAMAS text and return the drawn width in points."""
+    image = yamas_image(text, font_size, fill)
+    if image is None:
+        c.setFillColor(fill)
+        c.setFont("Helvetica-BoldOblique", min(max_height, 10))
+        text_width = min(max_width, c.stringWidth(text, "Helvetica-BoldOblique", min(max_height, 10)))
+        draw_x = x - text_width / 2 if align == "center" else x
+        c.drawString(draw_x, y, text)
+        return text_width
+
+    img_width, img_height = image.getSize()
+    scale = min(max_width / img_width, max_height / img_height)
+    draw_width = img_width * scale
+    draw_height = img_height * scale
+    draw_x = x - draw_width / 2 if align == "center" else x
+    c.drawImage(image, draw_x, y, width=draw_width, height=draw_height, mask="auto")
+    return draw_width
 
 
 def wrap_text(c: canvas.Canvas, text: str, font: str, size: float, max_width: float) -> list[str]:
@@ -85,39 +151,38 @@ def wrap_text(c: canvas.Canvas, text: str, font: str, size: float, max_width: fl
     return lines
 
 
+def draw_centered(c: canvas.Canvas, text: str, y: float, font: str, size: float, center_x: float) -> None:
+    c.setFont(font, size)
+    c.drawCentredString(center_x, y, text)
+
+
 def draw_label(c: canvas.Canvas, x: float, y: float, product_name: str, ingredients: str, produce_label: str) -> None:
-    pad_x = 9
+    pad_x = 10
     left = x + pad_x
     right = x + LABEL_W - pad_x
+    center = x + LABEL_W / 2
     width = right - left
 
-    # Product name
+    c.saveState()
+    clip = c.beginPath()
+    clip.rect(x, y, LABEL_W, LABEL_H)
+    c.clipPath(clip, stroke=0, fill=0)
+
+    # Brand word: actual YAMAS artwork, uppercase per Jess's label direction.
+    draw_yamas(c, BRAND, center, y + 88.5, width * 0.82, 15.5, font_size=72, fill=BROWN)
+
+    # Product name.
     c.setFillColor(BLACK)
-    c.setFont("Helvetica-Bold", 7.6)
-    c.drawString(left, y + 95, product_name)
+    draw_centered(c, product_name, y + 74.5, "Helvetica-Bold", 8.6, center)
 
-    # Ingredients. Two lines max leaves room for the legal/disclaimer block below.
-    c.setFont("Helvetica", 6.0)
-    for i, line in enumerate(wrap_text(c, f"Ingredients: {ingredients}", "Helvetica", 6.0, width)[:2]):
-        c.drawString(left, y + 85 - i * 7, line)
+    # Ingredients.
+    c.setFont("Helvetica", 5.6)
+    ingredient_lines = wrap_text(c, f"Ingredients: {ingredients}", "Helvetica", 5.6, width)
+    for i, line in enumerate(ingredient_lines[:2]):
+        c.drawString(left, y + 63.5 - i * 6.2, line)
 
-    # Homemade line, using Yamas only for the brand word.
-    made_y = y + 62
-    c.setFont("Helvetica", 6.2)
-    c.drawString(left, made_y, "Homemade with love at ")
-    prefix_w = c.stringWidth("Homemade with love at ", "Helvetica", 6.2)
-    c.setFont(YAMAS_FONT, 8.0)
-    c.drawString(left + prefix_w, made_y - 0.8, "ZUZZKIN'S")
-
-    # Contact + legal, intentionally smaller/italic.
-    c.setFillColor(MUTED)
-    c.setFont("Helvetica-Oblique", 3.7)
-    contact = f"{PHONE} · {ADDRESS} · {DISCLAIMER}"
-    for i, line in enumerate(wrap_text(c, contact, "Helvetica-Oblique", 3.7, width)[:3]):
-        c.drawString(left, y + 47 - i * 4.4, line)
-
-    # Dominant ingredient line for handwriting.
-    from_y = y + 30
+    # Dominant ingredient line for Jess to handwrite the farm/source.
+    from_y = y + 45.5
     c.setFillColor(BLACK)
     c.setFont("Helvetica", 6.0)
     label_text = f"{produce_label} from"
@@ -127,14 +192,31 @@ def draw_label(c: canvas.Canvas, x: float, y: float, product_name: str, ingredie
     c.setLineWidth(0.45)
     c.line(line_start, from_y - 1, right, from_y - 1)
 
-    # Website, using Yamas as requested.
-    c.setFillColor(BROWN)
-    c.setFont(YAMAS_FONT, 7.8)
-    c.drawString(left, y + 10, WEBSITE.upper())
+    # Homemade line, with ZUZZKINS rendered in YAMAS.
+    made_y = y + 31.5
+    c.setFillColor(BLACK)
+    c.setFont("Helvetica", 5.7)
+    made_text = "Homemade with love at "
+    made_width = c.stringWidth(made_text, "Helvetica", 5.7)
+    yamas_width_estimate = 42
+    start = center - (made_width + yamas_width_estimate) / 2
+    c.drawString(start, made_y, made_text)
+    draw_yamas(c, BRAND, start + made_width + 1, made_y - 2.2, 50, 9.5, font_size=52, fill=BLACK, align="left")
+
+    # Contact + legal, intentionally smaller and italic.
+    c.setFillColor(MUTED)
+    c.setFont("Helvetica-Oblique", 3.85)
+    contact = f"{PHONE} · {ADDRESS} · {DISCLAIMER}"
+    for i, line in enumerate(wrap_text(c, contact, "Helvetica-Oblique", 3.85, width)[:3]):
+        c.drawCentredString(center, y + 21.5 - i * 4.5, line)
+
+    # Website: actual YAMAS artwork, uppercase per Jess's label direction.
+    draw_yamas(c, WEBSITE, center, y + 3.0, width * 0.72, 9.0, font_size=52, fill=BROWN)
+
+    c.restoreState()
 
 
 def make_label_pdf(product_name: str, ingredients: str, output_path: str, produce_label: str | None = None) -> None:
-    register_fonts()
     if produce_label is None:
         produce_label = ingredients.split(",")[0].strip()
 

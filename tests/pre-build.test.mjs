@@ -145,8 +145,8 @@ test('YAMAS-styled text is forced lowercase visually', () => {
 test('About section source and public assets exist', () => {
   const index = readFileSync(join(ROOT, 'src/pages/index.astro'), 'utf8');
   assert.match(index, /id="about"/, 'Homepage should include final About section');
-  assert.match(index, /Zuzzkin’s is a cottage foods kitchen in Kingston Springs, Tennessee, offering small-batch canned goods with local and often homegrown ingredients\./, 'About copy should use Jess-approved sentence');
-  assert.match(index, /rotating cakes and bakes/i, 'About copy should mention rotating cakes and bakes');
+  assert.match(index, /Zuzzkin’s is a cottage foods kitchen in Kingston Springs, Tennessee, offering small-batch canned goods made with local and often homegrown ingredients\./, 'About copy should use Jess-approved sentence');
+  assert.match(index, /rotating cakes and bakes, made from scratch to reflect the best flavors of the season\./i, 'About copy should mention rotating cakes and bakes');
   assert.ok(existsSync(join(ROOT, 'public/about/strawberry-pot.jpg')), 'strawberry-pot about image missing');
   assert.ok(existsSync(join(ROOT, 'public/about/garden-flowers.jpg')), 'garden-flowers about image missing');
 });
