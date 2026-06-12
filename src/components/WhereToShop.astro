@@ -58,8 +58,8 @@ const trimmedNewsletterText = newsletterText?.trim();
       {trimmedNewsletterText && <p class="dates__signup-text">{trimmedNewsletterText}</p>}
       <form class="dates__form" id="ratPackForm">
         <input type="email" name="email" placeholder="Email address" required class="dates__input" />
-        <button type="submit" class="btn btn-rose" id="ratPackBtn">Sign Up</button>
-        <p class="ratpack-success" id="ratPackSuccess" hidden style="color: var(--color-sage-dark); font-family: var(--font-script); margin-top: 0.5rem;">Thanks — you're signed up for news and updates! ✦</p>
+        <button type="submit" class="btn btn-rose" id="ratPackBtn">sign up</button>
+        <p class="ratpack-success yamas-lowercase" id="ratPackSuccess" hidden style="color: var(--color-sage-dark); font-family: var(--font-script); margin-top: 0.5rem;">thanks — you're signed up for news and updates! ✦</p>
         <p class="ratpack-error" id="ratPackError" hidden style="color: var(--color-rose-dark); font-size: 0.875rem; margin-top: 0.5rem;">Something went wrong — please try again.</p>
       </form>
       <script>
@@ -71,7 +71,7 @@ const trimmedNewsletterText = newsletterText?.trim();
           e.preventDefault();
           const emailInput = rpForm.querySelector('input[name="email"]') as HTMLInputElement;
           if (!emailInput.value.trim()) return;
-          rpBtn.textContent = 'Signing up…';
+          rpBtn.textContent = 'signing up…';
           rpBtn.disabled = true;
           rpError.hidden = true;
           try {
@@ -96,7 +96,7 @@ const trimmedNewsletterText = newsletterText?.trim();
                 rpBtn.style.display = 'none';
                 rpSuccess.hidden = false;
               } else {
-                rpBtn.textContent = 'Sign Up';
+                rpBtn.textContent = 'sign up';
                 rpBtn.disabled = false;
                 rpError.hidden = false;
               }
@@ -126,6 +126,7 @@ const trimmedNewsletterText = newsletterText?.trim();
     font-weight: 700;
     color: var(--color-brown);
     margin-bottom: 2.5rem;
+    text-transform: lowercase;
   }
 
   .dates__list {
@@ -162,6 +163,7 @@ const trimmedNewsletterText = newsletterText?.trim();
     color: var(--color-brown);
     letter-spacing: 0.05em;
     line-height: 1.2;
+    text-transform: lowercase;
   }
 
   .dates__day-name {
@@ -183,6 +185,7 @@ const trimmedNewsletterText = newsletterText?.trim();
     font-size: 1rem;
     font-weight: 600;
     color: var(--color-brown);
+    text-transform: lowercase;
   }
 
   .dates__venue-link {
@@ -236,6 +239,7 @@ const trimmedNewsletterText = newsletterText?.trim();
     font-weight: 700;
     color: var(--color-brown);
     margin-bottom: 0.5rem;
+    text-transform: lowercase;
   }
 
   .dates__signup-text {

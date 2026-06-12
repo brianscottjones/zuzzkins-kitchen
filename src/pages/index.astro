@@ -94,6 +94,7 @@ const { photos, stops, site } = content;
         font-style: italic;
         letter-spacing: 0.02em;
         text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        text-transform: lowercase;
       }
       .slider__arrow {
         position: absolute;
@@ -407,6 +408,91 @@ const { photos, stops, site } = content;
     <Contact
       contactIntro={site.contactIntro}
     />
+
+    <section class="about" id="about">
+      <div class="container about__inner">
+        <div class="divider">
+          <span class="divider-symbol">✦</span>
+        </div>
+
+        <span class="eyebrow">about</span>
+        <h2 class="about__title">small batch, close to home</h2>
+        <div class="about__copy">
+          <p>Zuzzkin’s is a cottage foods kitchen in Kingston Springs, Tennessee, making small-batch canned goods with local and often homegrown ingredients.</p>
+          <p>The market table also features rotating cakes and bakes, made by hand in small runs as the season and the week’s ingredients allow.</p>
+        </div>
+
+        <div class="about__images" aria-label="Zuzzkin's garden and preserves photos">
+          <figure class="about__figure">
+            <img src="/about/strawberry-pot.jpg" alt="Strawberries simmering for preserves in a kitchen pot" loading="lazy" />
+          </figure>
+          <figure class="about__figure">
+            <img src="/about/garden-flowers.jpg" alt="Orange and yellow flowers growing in the Zuzzkin's garden" loading="lazy" />
+          </figure>
+        </div>
+
+        <div class="about__downloads" aria-label="Label PDF downloads">
+          <a href="/labels/strawberry-preserves.pdf" class="btn btn-dark">strawberry preserves label pdf</a>
+          <a href="/labels/green-tomato-chutney.pdf" class="btn btn-dark">green tomato chutney label pdf</a>
+        </div>
+      </div>
+    </section>
+
+    <style>
+      .about {
+        padding-block: var(--section-pad);
+        background: var(--color-cream);
+      }
+      .about__inner {
+        text-align: center;
+      }
+      .about__title {
+        font-family: var(--font-heading);
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 700;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+        text-transform: lowercase;
+      }
+      .about__copy {
+        display: grid;
+        gap: 1rem;
+        color: var(--color-text-muted);
+        font-size: clamp(1rem, 2vw, 1.08rem);
+        line-height: 1.85;
+        margin-inline: auto;
+        max-width: 42rem;
+      }
+      .about__images {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 2.5rem;
+      }
+      .about__figure {
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        border: 1px solid var(--color-border);
+        background: var(--color-white);
+      }
+      .about__figure img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .about__downloads {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+      @media (max-width: 640px) {
+        .about__images {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </main>
   <Footer contactEmail={site.contactEmail} />
 </Layout>

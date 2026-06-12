@@ -97,3 +97,61 @@ test('package.json is valid', () => {
   }
   assert.ok(pkg.scripts?.build, 'package.json missing scripts.build');
 });
+
+// ── Jess wishlist follow-ups ──────────────────────────────────────────────────
+
+test('body font is Lora', () => {
+  const css = readFileSync(join(ROOT, 'src/styles/global.css'), 'utf8');
+  assert.match(css, /family=Lora:/, 'Google Fonts import should include Lora');
+  assert.match(css, /--font-body:\s*'Lora'/, 'Body font variable should use Lora first');
+});
+
+test('YAMAS-styled text is forced lowercase visually', () => {
+  const css = readFileSync(join(ROOT, 'src/styles/global.css'), 'utf8');
+  assert.match(css, /\.yamas-lowercase[\s\S]*text-transform:\s*lowercase/, 'Need reusable lowercase helper for YAMAS text');
+
+  const sourceFiles = [
+    'src/styles/global.css',
+    'src/components/Hero.astro',
+    'src/components/WhereToShop.astro',
+    'src/components/Contact.astro',
+    'src/components/Footer.astro',
+    'src/pages/index.astro',
+  ].map((file) => readFileSync(join(ROOT, file), 'utf8')).join('\n');
+
+  const yamasSelectors = [
+    'h1, h2, h3',
+    '.eyebrow',
+    '.btn',
+    'label',
+    '.hero__tagline',
+    '.hero__nav-link',
+    '.dates__title',
+    '.dates__month-day',
+    '.dates__venue',
+    '.dates__signup-heading',
+    '.contact__title',
+    '.footer__name',
+    '.footer__nav a',
+    '.slider__label-text',
+  ];
+
+  for (const selector of yamasSelectors) {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    assert.match(sourceFiles, new RegExp(`${escaped}[\\s\\S]*?text-transform:\\s*lowercase`), `${selector} should force lowercase when using YAMAS`);
+  }
+});
+
+test('About section source and public assets exist', () => {
+  const index = readFileSync(join(ROOT, 'src/pages/index.astro'), 'utf8');
+  assert.match(index, /id="about"/, 'Homepage should include final About section');
+  assert.match(index, /Zuzzkin’s is a cottage foods kitchen in Kingston Springs, Tennessee, making small-batch canned goods with local and often homegrown ingredients\./, 'About copy should use Jess-approved sentence');
+  assert.match(index, /rotating cakes and bakes/i, 'About copy should mention rotating cakes and bakes');
+  assert.ok(existsSync(join(ROOT, 'public/about/strawberry-pot.jpg')), 'strawberry-pot about image missing');
+  assert.ok(existsSync(join(ROOT, 'public/about/garden-flowers.jpg')), 'garden-flowers about image missing');
+});
+
+test('requested label PDFs are available as public downloads', () => {
+  assert.ok(existsSync(join(ROOT, 'public/labels/strawberry-preserves.pdf')), 'public strawberry label PDF missing');
+  assert.ok(existsSync(join(ROOT, 'public/labels/green-tomato-chutney.pdf')), 'public green tomato chutney label PDF missing');
+});

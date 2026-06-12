@@ -47,7 +47,7 @@ const { contactIntro } = Astro.props;
       <button type="submit" class="btn btn-sage contact-submit">Send Message</button>
 
       <div class="contact-success" id="contactSuccess" hidden>
-        <p class="script">Message received! Talk soon.</p>
+        <p class="script yamas-lowercase">message received! talk soon.</p>
       </div>
 
     </form>
@@ -67,6 +67,7 @@ const { contactIntro } = Astro.props;
     font-weight: 700;
     color: var(--color-brown);
     margin-bottom: 1rem;
+    text-transform: lowercase;
   }
 
   .contact__intro {
