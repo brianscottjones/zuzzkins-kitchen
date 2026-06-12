@@ -107,7 +107,7 @@ def draw_label(c: canvas.Canvas, x: float, y: float, product_name: str, ingredie
     c.drawString(left, made_y, "Homemade with love at ")
     prefix_w = c.stringWidth("Homemade with love at ", "Helvetica", 6.2)
     c.setFont(YAMAS_FONT, 8.0)
-    c.drawString(left + prefix_w, made_y - 0.8, "Zuzzkin's")
+    c.drawString(left + prefix_w, made_y - 0.8, "ZUZZKIN'S")
 
     # Contact + legal, intentionally smaller/italic.
     c.setFillColor(MUTED)
@@ -130,7 +130,7 @@ def draw_label(c: canvas.Canvas, x: float, y: float, product_name: str, ingredie
     # Website, using Yamas as requested.
     c.setFillColor(BROWN)
     c.setFont(YAMAS_FONT, 7.8)
-    c.drawString(left, y + 10, WEBSITE)
+    c.drawString(left, y + 10, WEBSITE.upper())
 
 
 def make_label_pdf(product_name: str, ingredients: str, output_path: str, produce_label: str | None = None) -> None:

@@ -145,10 +145,18 @@ test('YAMAS-styled text is forced lowercase visually', () => {
 test('About section source and public assets exist', () => {
   const index = readFileSync(join(ROOT, 'src/pages/index.astro'), 'utf8');
   assert.match(index, /id="about"/, 'Homepage should include final About section');
-  assert.match(index, /Zuzzkin’s is a cottage foods kitchen in Kingston Springs, Tennessee, making small-batch canned goods with local and often homegrown ingredients\./, 'About copy should use Jess-approved sentence');
+  assert.match(index, /Zuzzkin’s is a cottage foods kitchen in Kingston Springs, Tennessee, offering small-batch canned goods with local and often homegrown ingredients\./, 'About copy should use Jess-approved sentence');
   assert.match(index, /rotating cakes and bakes/i, 'About copy should mention rotating cakes and bakes');
   assert.ok(existsSync(join(ROOT, 'public/about/strawberry-pot.jpg')), 'strawberry-pot about image missing');
   assert.ok(existsSync(join(ROOT, 'public/about/garden-flowers.jpg')), 'garden-flowers about image missing');
+});
+
+test('latest Jess nav and Next Stops tweaks are present', () => {
+  const hero = readFileSync(join(ROOT, 'src/components/Hero.astro'), 'utf8');
+  assert.match(hero, /href="#about"/, 'Hero nav should link to the About section');
+
+  const whereToShop = readFileSync(join(ROOT, 'src/components/WhereToShop.astro'), 'utf8');
+  assert.match(whereToShop, /\.dates__venue[\s\S]*font-size:\s*1\.15rem/, 'Market venue names should be slightly larger');
 });
 
 test('requested label PDFs are available as public downloads', () => {
