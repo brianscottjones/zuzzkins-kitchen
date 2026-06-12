@@ -159,7 +159,10 @@ test('latest Jess nav and Next Stops tweaks are present', () => {
   assert.match(whereToShop, /\.dates__venue[\s\S]*font-size:\s*1\.15rem/, 'Market venue names should be slightly larger');
 });
 
-test('requested label PDFs are available as public downloads', () => {
-  assert.ok(existsSync(join(ROOT, 'public/labels/strawberry-preserves.pdf')), 'public strawberry label PDF missing');
-  assert.ok(existsSync(join(ROOT, 'public/labels/green-tomato-chutney.pdf')), 'public green tomato chutney label PDF missing');
+test('label iteration PDFs are not exposed as public website downloads', () => {
+  const index = readFileSync(join(ROOT, 'src/pages/index.astro'), 'utf8');
+  assert.doesNotMatch(index, /\/labels\/strawberry-preserves\.pdf/, 'strawberry label PDF should not be linked from the site');
+  assert.doesNotMatch(index, /\/labels\/green-tomato-chutney\.pdf/, 'green tomato chutney label PDF should not be linked from the site');
+  assert.ok(!existsSync(join(ROOT, 'public/labels/strawberry-preserves.pdf')), 'public strawberry label PDF should not be present');
+  assert.ok(!existsSync(join(ROOT, 'public/labels/green-tomato-chutney.pdf')), 'public green tomato chutney label PDF should not be present');
 });
