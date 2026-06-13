@@ -3,7 +3,7 @@
 Zuzzkin's Kitchen — Avery 5360 ingredient label generator.
 
 Usage:
-  python3 make-label.py "Product Name" "Ingredient 1, Ingredient 2" [output.pdf] ["Dominant ingredient from"]
+  python3 make-label.py "Product Name" "Ingredient 1, Ingredient 2" [output.pdf] ["Dominant ingredient from"] ["$8.00"]
 
 Produces one Letter page with 21 labels, 3 columns × 7 rows, sized for Avery 5360
 (2-13/16" × 1-1/2"). The licensed YAMAS OTF is rendered into the PDF as image
@@ -33,14 +33,16 @@ LABELS_DIR = os.path.join(SCRIPT_DIR, "labels")
 YAMAS_OTF = os.path.join(SCRIPT_DIR, "public", "fonts", "yamas", "TAYYamasRegular.otf")
 
 # Avery 5360: 3 × 7, 2-13/16" × 1-1/2".
-# Template: 0.1875" left/right margins, 0.5" top/bottom margins,
-# 0.0625" horizontal gutters, no vertical gutters.
+# The 2-13/16" width leaves only 1/16" spare across three columns on US Letter,
+# so the template uses 1/32" side margins and no horizontal gutter. A previous
+# 3/16" margin + 1/16" gutter layout overflowed the page and clipped the right
+# column, which is exactly what Jess flagged.
 PAGE_W, PAGE_H = letter
 LABEL_W = 2.8125 * inch
 LABEL_H = 1.5 * inch
-LEFT_MARGIN = 0.1875 * inch
+LEFT_MARGIN = 0.03125 * inch
 TOP_MARGIN = 0.5 * inch
-H_GAP = 0.0625 * inch
+H_GAP = 0.0 * inch
 COL_X = [LEFT_MARGIN + i * (LABEL_W + H_GAP) for i in range(3)]
 ROW_Y = [PAGE_H - TOP_MARGIN - LABEL_H - i * LABEL_H for i in range(7)]
 
@@ -56,7 +58,7 @@ DISCLAIMER = (
     "licensing and inspection. This product may contain allergens."
 )
 WEBSITE = "ZUZZKINS.COM"
-BRAND = "ZUZZKINS"
+BRAND = "ZUZZKIN'S"
 
 _yamas_cache: dict[tuple[str, int, str], ImageReader] = {}
 
@@ -156,7 +158,15 @@ def draw_centered(c: canvas.Canvas, text: str, y: float, font: str, size: float,
     c.drawCentredString(center_x, y, text)
 
 
-def draw_label(c: canvas.Canvas, x: float, y: float, product_name: str, ingredients: str, produce_label: str) -> None:
+def draw_label(
+    c: canvas.Canvas,
+    x: float,
+    y: float,
+    product_name: str,
+    ingredients: str,
+    produce_label: str,
+    price: str,
+) -> None:
     pad_x = 10
     left = x + pad_x
     right = x + LABEL_W - pad_x
@@ -164,25 +174,29 @@ def draw_label(c: canvas.Canvas, x: float, y: float, product_name: str, ingredie
     width = right - left
 
     c.saveState()
+    # Avery 5360 cut boundary. Jess asked to see the boundaries so she can
+    # confirm the labels print centered on the physical template.
+    c.setStrokeColor(colors.HexColor("#B8B0A6"))
+    c.setLineWidth(0.35)
+    c.rect(x, y, LABEL_W, LABEL_H, stroke=1, fill=0)
+
     clip = c.beginPath()
     clip.rect(x, y, LABEL_W, LABEL_H)
     c.clipPath(clip, stroke=0, fill=0)
 
-    # Brand word: actual YAMAS artwork, uppercase per Jess's label direction.
-    draw_yamas(c, BRAND, center, y + 88.5, width * 0.82, 15.5, font_size=72, fill=BROWN)
-
-    # Product name.
+    # Product name at the top. Jess asked to remove the standalone Zuzzkin's
+    # brand from the top and shift the label text upward.
     c.setFillColor(BLACK)
-    draw_centered(c, product_name, y + 74.5, "Helvetica-Bold", 8.6, center)
+    draw_centered(c, product_name, y + 92.0, "Helvetica-Bold", 10.8, center)
 
     # Ingredients.
-    c.setFont("Helvetica", 5.6)
-    ingredient_lines = wrap_text(c, f"Ingredients: {ingredients}", "Helvetica", 5.6, width)
-    for i, line in enumerate(ingredient_lines[:2]):
-        c.drawString(left, y + 63.5 - i * 6.2, line)
+    c.setFont("Helvetica", 5.9)
+    ingredient_lines = wrap_text(c, f"Ingredients: {ingredients}", "Helvetica", 5.9, width)
+    for i, line in enumerate(ingredient_lines[:3]):
+        c.drawString(left, y + 80.5 - i * 6.5, line)
 
     # Dominant ingredient line for Jess to handwrite the farm/source.
-    from_y = y + 45.5
+    from_y = y + 59.0
     c.setFillColor(BLACK)
     c.setFont("Helvetica", 6.0)
     label_text = f"{produce_label} from"
@@ -193,30 +207,41 @@ def draw_label(c: canvas.Canvas, x: float, y: float, product_name: str, ingredie
     c.line(line_start, from_y - 1, right, from_y - 1)
 
     # Homemade line, with ZUZZKINS rendered in YAMAS.
-    made_y = y + 31.5
+    made_y = y + 44.5
     c.setFillColor(BLACK)
-    c.setFont("Helvetica", 5.7)
+    c.setFont("Helvetica", 5.8)
     made_text = "Homemade with love at "
-    made_width = c.stringWidth(made_text, "Helvetica", 5.7)
-    yamas_width_estimate = 42
+    made_width = c.stringWidth(made_text, "Helvetica", 5.8)
+    yamas_width_estimate = 54
     start = center - (made_width + yamas_width_estimate) / 2
     c.drawString(start, made_y, made_text)
-    draw_yamas(c, BRAND, start + made_width + 1, made_y - 2.2, 50, 9.5, font_size=52, fill=BLACK, align="left")
+    draw_yamas(c, BRAND, start + made_width + 1, made_y - 3.0, 65, 12.0, font_size=70, fill=BLACK, align="left")
 
     # Contact + legal, intentionally smaller and italic.
     c.setFillColor(MUTED)
-    c.setFont("Helvetica-Oblique", 3.85)
+    c.setFont("Helvetica-Oblique", 3.65)
     contact = f"{PHONE} · {ADDRESS} · {DISCLAIMER}"
-    for i, line in enumerate(wrap_text(c, contact, "Helvetica-Oblique", 3.85, width)[:3]):
-        c.drawCentredString(center, y + 21.5 - i * 4.5, line)
+    for i, line in enumerate(wrap_text(c, contact, "Helvetica-Oblique", 3.65, width)[:3]):
+        c.drawCentredString(center, y + 34.0 - i * 4.25, line)
 
     # Website: actual YAMAS artwork, uppercase per Jess's label direction.
-    draw_yamas(c, WEBSITE, center, y + 3.0, width * 0.72, 9.0, font_size=52, fill=BROWN)
+    draw_yamas(c, WEBSITE, center, y + 13.3, width * 0.82, 12.5, font_size=76, fill=BROWN)
+
+    # Clear price at the bottom, parallel with website/product pricing.
+    c.setFillColor(BLACK)
+    c.setFont("Helvetica-Bold", 8.0)
+    c.drawCentredString(center, y + 4.0, price)
 
     c.restoreState()
 
 
-def make_label_pdf(product_name: str, ingredients: str, output_path: str, produce_label: str | None = None) -> None:
+def make_label_pdf(
+    product_name: str,
+    ingredients: str,
+    output_path: str,
+    produce_label: str | None = None,
+    price: str = "",
+) -> None:
     if produce_label is None:
         produce_label = ingredients.split(",")[0].strip()
 
@@ -224,7 +249,7 @@ def make_label_pdf(product_name: str, ingredients: str, output_path: str, produc
     c = canvas.Canvas(output_path, pagesize=letter)
     for y in ROW_Y:
         for x in COL_X:
-            draw_label(c, x, y, product_name, ingredients, produce_label)
+            draw_label(c, x, y, product_name, ingredients, produce_label, price)
     c.save()
     print(f"Saved: {output_path}")
 
@@ -238,4 +263,5 @@ if __name__ == "__main__":
     ingredients = sys.argv[2]
     output = sys.argv[3] if len(sys.argv) >= 4 else os.path.join(LABELS_DIR, f"{slugify(product)}.pdf")
     produce = sys.argv[4] if len(sys.argv) >= 5 else None
-    make_label_pdf(product, ingredients, output, produce)
+    price = sys.argv[5] if len(sys.argv) >= 6 else ""
+    make_label_pdf(product, ingredients, output, produce, price)

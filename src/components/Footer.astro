@@ -33,6 +33,7 @@ const year = new Date().getFullYear();
     )}
 
     <p class="footer__copy">© {year} Zuzzkin's Kitchen · Always Homemade</p>
+    <p class="footer__artwork">Artwork: Heaven Parkinson (<a href="https://www.instagram.com/dearhoney.art/" target="_blank" rel="noopener noreferrer">@dearhoney.art</a>)</p>
 
   </div>
 </footer>
@@ -112,10 +113,22 @@ const year = new Date().getFullYear();
     color: var(--color-brown);
   }
 
-  .footer__copy {
+  .footer__copy,
+  .footer__artwork {
     text-align: center;
     font-size: 0.75rem;
     color: var(--color-text-muted);
     letter-spacing: 0.04em;
+  }
+
+  .footer__artwork {
+    margin-top: 0.45rem;
+  }
+
+  .footer__artwork a {
+    color: var(--color-rose-dark);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
   }
 </style>
