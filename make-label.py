@@ -32,7 +32,9 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 LABELS_DIR = os.path.join(SCRIPT_DIR, "labels")
 YAMAS_OTF = os.path.join(SCRIPT_DIR, "public", "fonts", "yamas", "TAYYamasRegular.otf")
 
-# Avery 5360: 3 × 7, 2-13/16" × 1-1/2".
+# Avery 5360 official template: 3 × 7, 2-13/16" × 1-1/2" on US Letter.
+# Jess supplied Avery's own PDF template; its cut lines are at x≈2.25 pt,
+# 204.75 pt, 407.25 pt, 609.75 pt and y≈18 pt from the top, then every 108 pt.
 # The 2-13/16" width leaves only 1/16" spare across three columns on US Letter,
 # so the template uses 1/32" side margins and no horizontal gutter. A previous
 # 3/16" margin + 1/16" gutter layout overflowed the page and clipped the right
@@ -41,7 +43,7 @@ PAGE_W, PAGE_H = letter
 LABEL_W = 2.8125 * inch
 LABEL_H = 1.5 * inch
 LEFT_MARGIN = 0.03125 * inch
-TOP_MARGIN = 0.5 * inch
+TOP_MARGIN = 0.25 * inch
 H_GAP = 0.0 * inch
 COL_X = [LEFT_MARGIN + i * (LABEL_W + H_GAP) for i in range(3)]
 ROW_Y = [PAGE_H - TOP_MARGIN - LABEL_H - i * LABEL_H for i in range(7)]
@@ -227,10 +229,10 @@ def draw_label(
     # Website: actual YAMAS artwork, uppercase per Jess's label direction.
     draw_yamas(c, WEBSITE, center, y + 13.3, width * 0.82, 12.5, font_size=76, fill=BROWN)
 
-    # Clear price at the bottom, parallel with website/product pricing.
+    # Clear price at the bottom right, per Jess's template-email instruction.
     c.setFillColor(BLACK)
     c.setFont("Helvetica-Bold", 8.0)
-    c.drawCentredString(center, y + 4.0, price)
+    c.drawRightString(right, y + 4.0, price)
 
     c.restoreState()
 
